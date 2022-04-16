@@ -40,8 +40,9 @@ program
     await writeJson(join(target, "folder.json"), folderStructureCompressed);
 
     const docs = await new Documentalist()
-      .use(/\.tsx?$/, new TypescriptPlugin({ verbose: true }))
+      .use(/\.tsx?$/, new TypescriptPlugin({ verbose: true, includeDeclarations: true }))
       .documentGlobs("tmp/**/*");
+
 
     const compressed = compress(JSON.parse(JSON.stringify(docs)));
     await writeJson(join(target, "docs.json"), compressed);

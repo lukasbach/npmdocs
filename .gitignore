@@ -1,5 +1,6 @@
 /packages/*/out
 /packages/*/lib
+/packages/*/tmp
 .idea
 node_modules
 storybook-static
