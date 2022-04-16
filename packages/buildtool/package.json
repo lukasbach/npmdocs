@@ -18,6 +18,9 @@
     "start": "ts-node src/buildtools.ts",
     "prepublish": "yarn build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
@@ -45,5 +48,6 @@
     "compress-json": "^2.0.1",
     "download-tarball": "^2.0.0",
     "fs-extra": "^10.0.1"
-  }
+  },
+  "gitHead": "54a1f57139ba50606b5fb5a679b27f9c019ab9b2"
 }
