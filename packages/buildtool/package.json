@@ -1,0 +1,49 @@
+{
+  "name": "@lukasbach/npmdocs-buildtool",
+  "version": "1.1.2",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lukasbach/npmdocs.git",
+    "directory": "packages/buildtool"
+  },
+  "author": "Lukas Bach",
+  "license": "MIT",
+  "private": false,
+  "main": "lib/index.js",
+  "bin": {
+    "build-npmdocs": "lib/build-npmdocs.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/buildtools.ts",
+    "prepublish": "yarn build"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "@testing-library/dom": "^8.13.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^7.0.2",
+    "@testing-library/user-event": "^14.0.4",
+    "@types/jest": "^27.4.1",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.0",
+    "@types/fs-extra": "^9.0.13",
+    "babel-jest": "^26.6.3",
+    "cpy-cli": "^3.1.1",
+    "jest": "^26.6.3",
+    "npm-run-all": "^4.1.5",
+    "react-test-renderer": "^17.0.1",
+    "ts-jest": "^26.4.4",
+    "typescript": "4.0.8",
+    "ts-node": "^10.7.0"
+  },
+  "dependencies": {
+    "@documentalist/compiler": "^4.0.0",
+    "commander": "^9.2.0",
+    "download-tarball": "^2.0.0",
+    "fs-extra": "^10.0.1",
+    "compress-json": "^2.0.1"
+  }
+}

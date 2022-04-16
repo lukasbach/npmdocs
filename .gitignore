@@ -1,0 +1,7 @@
+/packages/*/out
+/packages/*/lib
+.idea
+node_modules
+storybook-static
+yarn-error.log
+packages/synergies/README.md
