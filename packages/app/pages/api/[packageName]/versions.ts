@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ...acc,
       [version]: {
         time: allVersions.time[version],
-        built: generatedVersions.includes(version),
+        built: generatedVersions?.includes(version) ?? false,
       },
     }),
     [] as string[]

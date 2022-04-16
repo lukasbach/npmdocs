@@ -1,9 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { dispatchWorkflow } from "../../../../src/api/helpers";
+import { dispatchWorkflow, getWorkflowRuns } from "../../../../src/api/helpers";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     res.status(404).end();
+    return;
+  }
+
+  const currentRuns = (await getWorkflowRuns("in_progress")).count;
+
+  if (currentRuns >= 3) {
+    res.status(429).json({
+      message:
+        "There are currently too many in-progress builds, try again later.",
+    });
     return;
   }
 
@@ -20,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   await dispatchWorkflow({
-    packageName,
+    packageName: fixedPackage,
     packageVersion: version,
   });
 
