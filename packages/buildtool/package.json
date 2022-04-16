@@ -11,7 +11,7 @@
   "private": false,
   "main": "lib/index.js",
   "bin": {
-    "build-npmdocs": "lib/build-npmdocs.js"
+    "build-npmdocs": "./lib/buildtools.js"
   },
   "scripts": {
     "build": "tsc",
