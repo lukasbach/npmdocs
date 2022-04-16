@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getFile } from "../../../../src/api/helpers";
+import { getFile } from "../../../../src/github/helpers";
 import { decompress } from "compress-json";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

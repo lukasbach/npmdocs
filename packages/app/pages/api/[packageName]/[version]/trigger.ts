@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { dispatchWorkflow, getWorkflowRuns } from "../../../../src/api/helpers";
+import {
+  dispatchWorkflow,
+  getWorkflowRuns,
+} from "../../../../src/github/helpers";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {

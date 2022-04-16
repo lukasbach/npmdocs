@@ -5,15 +5,19 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@octokit/rest": "^18.12.0",
     "compress-json": "^2.0.1",
     "next": "12.1.5",
     "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react-dom": "18.0.0",
+    "swr": "^1.2.2",
+    "react-popper": "^2.2.5",
+    "@popperjs/core": "^2.11.5",
+    "react-icons": "^4.3.1",
+    "@documentalist/client": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.18",

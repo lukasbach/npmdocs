@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getFolderContents } from "../../../src/api/helpers";
+import { getFolderContents } from "../../../src/github/helpers";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  console.log(req);
   const { packageName } = req.query;
   const fixedPackage = (packageName as string).replace(/__/g, "/");
   const allVersionsPromise = fetch(
@@ -15,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     generatedVersionsPromise,
   ]);
   const versions = Object.keys(allVersions.versions);
-  const result = versions.reduce(
+  const result = versions.reverse().reduce(
     (acc, version) => ({
       ...acc,
       [version]: {

@@ -1,0 +1,24 @@
+.sidebar {
+  background-color: var(--sidebar);
+  color: var(--text-on-sidebar);
+  min-width: 300px;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebarHeader {
+  font-size: 1.4rem;
+  padding: .8rem 20px 4px 20px;
+}
+
+.sidebarItem {
+  font-size: .9rem;
+  padding: 2px 20px;
+  cursor: pointer;
+}
+.sidebarItem:hover {
+  background-color: var(--sidebar-item-hover);
+}
+.sidebarItem:active {
+  background-color: var(--sidebar-item-active);
+}
