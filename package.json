@@ -1,6 +1,6 @@
 {
   "name": "npmdocs-root",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:lukasbach/npmdocs.git"
