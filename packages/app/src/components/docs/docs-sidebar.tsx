@@ -47,12 +47,17 @@ const SidebarSection: React.FC<{
 export const DocsSidebar: React.FC<{
   packageName: string;
   packageVersion: string;
-}> = ({ packageName, packageVersion }) => {
+  currentKey?: string;
+}> = ({ packageName, packageVersion, currentKey }) => {
   const { data: docs, error } = usePackageDocs(packageName, packageVersion);
 
   return (
     <Sidebar>
-      <PackageSidebarItems packageName={packageName} version={packageVersion} />
+      <PackageSidebarItems
+        packageName={packageName}
+        version={packageVersion}
+        currentKey={currentKey}
+      />
       <SidebarSection docs={docs} guard={isTsClass} title="Classes" />
       <SidebarSection docs={docs} guard={isTsEnum} title="Enums" />
       <SidebarSection docs={docs} guard={isTsInterface} title="Interfaces" />

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ReactNode } from "react";
+import Link from "next/link";
 
 import style from "./styles.module.css";
 
@@ -9,13 +10,14 @@ export const SidebarItem: React.FC<{
   selected?: boolean;
 }> = props => {
   return (
-    <a
-      href={props.href}
-      className={`${style.sidebarItem} ${
-        props.selected && style.sideBarItemSelected
-      }`}
-    >
-      {props.children}
-    </a>
+    <Link href={props.href}>
+      <a
+        className={`${style.sidebarItem} ${
+          props.selected && style.sideBarItemSelected
+        }`}
+      >
+        {props.children}
+      </a>
+    </Link>
   );
 };

@@ -21,6 +21,12 @@ export const usePackageVersions = (packageName: string) =>
 export const useAboutPackage = (packageName: string) =>
   useSWR<any>(`/api/${packageName}/about`, fetcher);
 
+export const useReadme = (packageName: string, version: string) =>
+  useSWR<any>(`/api/${packageName}/${version}/readme`, fetcher);
+
+export const usePackageJson = (packageName: string, version: string) =>
+  useSWR<any>(`/api/${packageName}/${version}/packagejson`, fetcher);
+
 export const usePackageDocs = (packageName: string, version: string) =>
   useSWR<ITypescriptPluginData>(`/api/${packageName}/${version}/docs`, fetcher);
 

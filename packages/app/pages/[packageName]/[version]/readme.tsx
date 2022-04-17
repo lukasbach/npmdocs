@@ -5,21 +5,28 @@ import { LayoutContainer } from "../../../src/components/common/layout/layout-co
 import { useRouterQuery } from "../../../src/common/use-router-query";
 import Head from "next/head";
 import { useTriggerRedirect } from "../../../src/common/use-trigger-redirect";
+import { useReadme } from "../../../src/api/api-helpers";
+import { Markdown } from "../../../src/components/common/markdown";
 
 const Page: FC = () => {
   useTriggerRedirect();
   const { packageName, version } = useRouterQuery();
+  const { data } = useReadme(packageName, version);
   return (
     <LayoutContainer
       header={<DocsHeader packageName={packageName} packageVersion={version} />}
       sidebar={
-        <DocsSidebar packageName={packageName} packageVersion={version} />
+        <DocsSidebar
+          packageName={packageName}
+          packageVersion={version}
+          currentKey="readme"
+        />
       }
     >
       <Head>
         <title>{`${packageName}@${version}`} readme</title>
       </Head>
-      Readme
+      <Markdown markdown={data?.readme} />
     </LayoutContainer>
   );
 };

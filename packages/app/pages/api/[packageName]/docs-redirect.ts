@@ -3,6 +3,12 @@ import { getVersions } from "../../../src/github/get-versions";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName } = req.query;
+
+  if (!packageName) {
+    res.redirect("/");
+    return;
+  }
+
   const fixedPackage = (packageName as string).replace(/__/g, "/");
   const versions = await getVersions(fixedPackage);
   const versionToRedirectTo =
