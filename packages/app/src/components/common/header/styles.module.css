@@ -41,8 +41,26 @@
 .headerListBtn:hover {
   background-color: var(--header-list-btn-hover);
 }
+.headerListBtn:focus {
+  background-color: var(--header-list-btn-hover);
+}
 .headerListBtn > svg:first-child {
   margin-right: 4px;
+}
+
+.headerInputContainer {
+  display: flex;
+  align-items: center;
+}
+.headerInput {
+  margin-left: 4px;
+  margin-right: 12px;
+  background-color: transparent;
+  border: none;
+  color: var(--text-on-header);
+}
+.headerInput::placeholder {
+  color: var(--text-on-header);
 }
 
 .expander {

@@ -11,6 +11,7 @@ import {
   IoLibrarySharp,
 } from "react-icons/io5";
 import { HeaderExpander } from "../common/header/header-expander";
+import { PackageSearchInput } from "./package-search-input";
 
 export const DocsHeader: React.FC<{
   packageName: string;
@@ -18,6 +19,7 @@ export const DocsHeader: React.FC<{
 }> = props => {
   const { data: versions, error } = usePackageVersions(props.packageName);
   const { data: about } = useAboutPackage(props.packageName);
+
   return (
     <Header>
       <HeaderButton
@@ -67,6 +69,7 @@ export const DocsHeader: React.FC<{
         </HeaderButton>
       )}
       <HeaderExpander />
+      <PackageSearchInput />
       <HeaderButton text="@lukasbach" />
       <ColormodeButton />
     </Header>

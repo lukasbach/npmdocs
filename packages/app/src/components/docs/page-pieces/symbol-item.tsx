@@ -36,9 +36,11 @@ export const SymbolItem: FC<{ child: ITsDocBase }> = ({ child }) => {
 
       {isExpanded && (
         <div className={style.body}>
-          <pre className={generalStyle.codeblock}>
-            {child.name}: <Signature item={child} />
-          </pre>
+          {!isTsMethod(child) && (
+            <pre className={generalStyle.codeblock}>
+              {child.name}: <Signature item={child} />
+            </pre>
+          )}
           <DocumentationDescription
             block={
               child.documentation ??
@@ -50,7 +52,9 @@ export const SymbolItem: FC<{ child: ITsDocBase }> = ({ child }) => {
           {isTsMethod(child) &&
             child.signatures.map(signature => (
               <div key={signature.name}>
-                <Signature item={signature} />
+                <pre className={generalStyle.codeblock}>
+                  <Signature item={signature} />
+                </pre>
                 <DocumentationDescription block={signature.documentation} />
               </div>
             ))}
