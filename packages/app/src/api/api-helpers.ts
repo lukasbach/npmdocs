@@ -30,6 +30,12 @@ export const usePackageJson = (packageName: string, version: string) =>
 export const usePackageDocs = (packageName: string, version: string) =>
   useSWR<ITypescriptPluginData>(`/api/${packageName}/${version}/docs`, fetcher);
 
+export const usePackageSource = (packageName: string, version: string) =>
+  useSWR<Record<string, true | object>>(
+    `/api/${packageName}/${version}/folder`,
+    fetcher
+  );
+
 export type Typeguard<T extends ITsDocBase> = (data: any) => data is T;
 
 export const useFilteredDocsEntity = <T extends ITsDocBase>(
