@@ -1,0 +1,32 @@
+.item {
+
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.head > :last-child {
+  text-align: right;
+}
+
+.chevron {
+  margin-right: 12px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  font-family: var(--font-mono);
+  flex-grow: 1;
+}
+
+.body {
+  margin: 0 0 2rem .5rem;
+  border-left: 4px solid var(--text-on-bg);
+  padding: 0 0 0 1rem;
+}

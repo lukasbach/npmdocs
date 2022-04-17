@@ -12,6 +12,7 @@
 }
 
 .sidebarItem {
+  display: block;
   font-size: .9rem;
   padding: 2px 20px;
   cursor: pointer;

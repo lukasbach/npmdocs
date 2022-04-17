@@ -24,6 +24,7 @@ a {
 
 .light, .dark {
   --header-list-bg: var(--header);
+  --font-mono: monospace;
 }
 
 .light {
@@ -43,7 +44,7 @@ a {
 
 .dark {
   --primary: var(--indigo1);
-  --bg: var(--dark-gray5);
+  --bg: var(--dark-gray2);
   --header: var(--dark-gray1);
   --sidebar: var(--dark-gray3);
   --sidebar-item-hover: var(--dark-gray4);

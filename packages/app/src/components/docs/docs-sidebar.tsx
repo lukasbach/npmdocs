@@ -27,7 +27,9 @@ const SidebarSection: React.FC<{
     <>
       <SidebarHeader>{props.title}</SidebarHeader>
       {Object.entries(items).map(([key, value]) => (
-        <SidebarItem key={key}>{key}</SidebarItem>
+        <SidebarItem href={`#${key}`} key={key}>
+          {key}
+        </SidebarItem>
       ))}
     </>
   );

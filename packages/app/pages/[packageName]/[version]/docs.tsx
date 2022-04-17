@@ -7,6 +7,8 @@ import {
   usePackageDocs,
   usePackageVersions,
 } from "../../../src/api/api-helpers";
+import { HashRouter, Routes, Route } from "react-router-dom";
+import { DocsPage } from "../../../src/components/docs/docs-page";
 
 const Page: FC = () => {
   const { packageName, version } = useRouterQuery();
@@ -18,7 +20,7 @@ const Page: FC = () => {
         <DocsSidebar packageName={packageName} packageVersion={version} />
       }
     >
-      <pre>{JSON.stringify(docs, null, 2)}</pre>
+      <DocsPage />
     </LayoutContainer>
   );
 };

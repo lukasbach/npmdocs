@@ -1,0 +1,48 @@
+.container {
+  max-width: 900px;
+}
+
+.container h1 {
+  font-weight: normal;
+  font-family: var(--font-mono);
+}
+
+.container h2 {
+
+}
+
+.flag {
+
+}
+
+.titleHeavy {
+  font-weight: bold;
+}
+
+.description {
+
+}
+.description p {
+  margin: 10px 0;
+}
+
+.descriptionTag {
+  font-weight: bold;
+  font-family: var(--font-mono);
+}
+.descriptionTagContainer {
+}
+
+
+.signature {
+  font-family: var(--font-mono);
+}
+.signature a {
+  text-decoration: underline;
+}
+
+.codeblock {
+  background-color: var(--sidebar);
+  color: var(--text-on-sidebar);
+  padding: 8px 16px;
+}

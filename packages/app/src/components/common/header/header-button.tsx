@@ -24,7 +24,8 @@ export const HeaderButton: FC<{
         isOpen &&
         e.target !== referenceElement &&
         e.target !== popperElement &&
-        !popperElement?.contains(e.target)
+        !popperElement?.contains(e.target) &&
+        !referenceElement?.contains(e.target)
       ) {
         setIsOpen(false);
       }
