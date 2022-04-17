@@ -13,6 +13,10 @@
   text-align: right;
 }
 
+.head:hover :nth-child(2) {
+  text-decoration: underline;
+}
+
 .chevron {
   margin-right: 12px;
   font-size: 1.2rem;

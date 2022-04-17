@@ -3,10 +3,11 @@ import {
   dispatchWorkflow,
   getWorkflowRuns,
 } from "../../../../src/github/helpers";
+import { getVersions } from "../../../../src/github/get-versions";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
-    res.status(404).end();
+    res.status(404).json({ error: "Must be POST request." });
     return;
   }
 
@@ -14,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (currentRuns >= 3) {
     res.status(429).json({
-      message:
+      error:
         "There are currently too many in-progress builds, try again later.",
     });
     return;
@@ -23,12 +24,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName, version } = req.query;
   const fixedPackage = (packageName as string).replace(/__/g, "/");
 
-  const { versions } = await fetch(
-    `https://registry.npmjs.org/${fixedPackage}`
-  ).then(res => res.json());
-
+  const versions = await getVersions(fixedPackage);
   if (!Object.keys(versions).includes(version as string)) {
-    res.status(404).end();
+    console.log(versions, version, fixedPackage);
+    res.status(404).json({ error: "Requested version not available on NPM." });
+    return;
+  }
+
+  if (versions[version as string].built) {
+    res.status(410).json({ error: "This version has already been built." });
     return;
   }
 

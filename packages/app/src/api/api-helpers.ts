@@ -4,6 +4,11 @@ import { useMemo } from "react";
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
+  if (res.status === 404) {
+    const err = new Error(`Not found: ${url}`);
+    (err as any).status = 404;
+    throw err;
+  }
   return await res.json();
 };
 

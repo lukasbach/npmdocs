@@ -3,16 +3,13 @@ import { DocsHeader } from "../../../src/components/docs/docs-header";
 import { DocsSidebar } from "../../../src/components/docs/docs-sidebar";
 import { LayoutContainer } from "../../../src/components/common/layout/layout-container";
 import { useRouterQuery } from "../../../src/common/use-router-query";
-import {
-  usePackageDocs,
-  usePackageVersions,
-} from "../../../src/api/api-helpers";
-import { HashRouter, Routes, Route } from "react-router-dom";
 import { DocsPage } from "../../../src/components/docs/docs-page";
+import Head from "next/head";
+import { useTriggerRedirect } from "../../../src/common/use-trigger-redirect";
 
 const Page: FC = () => {
+  useTriggerRedirect();
   const { packageName, version } = useRouterQuery();
-  const { data: docs, error } = usePackageDocs(packageName, version);
   return (
     <LayoutContainer
       header={<DocsHeader packageName={packageName} packageVersion={version} />}
@@ -20,6 +17,9 @@ const Page: FC = () => {
         <DocsSidebar packageName={packageName} packageVersion={version} />
       }
     >
+      <Head>
+        <title>{`${packageName}@${version}`} docs</title>
+      </Head>
       <DocsPage />
     </LayoutContainer>
   );

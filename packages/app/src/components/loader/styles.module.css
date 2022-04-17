@@ -1,0 +1,19 @@
+.loader {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  max-width: 500px;
+}
+
+.subtitle {
+  max-width: 500px;
+}

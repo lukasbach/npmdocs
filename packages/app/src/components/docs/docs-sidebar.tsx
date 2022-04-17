@@ -16,18 +16,27 @@ import {
   isTsTypeAlias,
   ITypescriptPluginData,
 } from "@documentalist/client";
+import { PackageSidebarItems } from "../package/package-sidebar-items";
+import { useRouterQuery } from "../../common/use-router-query";
+import { useHash } from "../../common/use-hash";
 
 const SidebarSection: React.FC<{
   docs: ITypescriptPluginData | undefined;
   guard: Typeguard<any>;
   title: string;
 }> = props => {
+  const hash = useHash();
+  const { packageName, version } = useRouterQuery();
   const items = useFilteredDocsEntity(props.docs, props.guard);
   return !items ? null : (
     <>
-      <SidebarHeader>{props.title}</SidebarHeader>
+      <SidebarHeader as="h2">{props.title}</SidebarHeader>
       {Object.entries(items).map(([key, value]) => (
-        <SidebarItem href={`#${key}`} key={key}>
+        <SidebarItem
+          href={`/${packageName}/${version}#${key}`}
+          key={key}
+          selected={hash === key}
+        >
           {key}
         </SidebarItem>
       ))}
@@ -43,6 +52,7 @@ export const DocsSidebar: React.FC<{
 
   return (
     <Sidebar>
+      <PackageSidebarItems packageName={packageName} version={packageVersion} />
       <SidebarSection docs={docs} guard={isTsClass} title="Classes" />
       <SidebarSection docs={docs} guard={isTsEnum} title="Enums" />
       <SidebarSection docs={docs} guard={isTsInterface} title="Interfaces" />

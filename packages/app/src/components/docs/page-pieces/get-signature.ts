@@ -12,7 +12,7 @@ export const getSignature = (item: ITsDocBase) => {
     : isTsProperty(item)
     ? item.type
     : isTsEnumMember(item)
-    ? `= ${item.kind}`
+    ? item.defaultValue
     : isTsSignature(item)
     ? item.type
     : isTsTypeAlias(item)

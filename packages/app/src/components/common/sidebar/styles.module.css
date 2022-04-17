@@ -8,7 +8,12 @@
 
 .sidebarHeader {
   font-size: 1.4rem;
-  padding: .8rem 20px 4px 20px;
+  margin: 2rem 20px 12px 20px;
+}
+
+h1.sidebarHeader {
+  font-size: 2rem;
+  margin: 3rem 40px 16px 20px !important;
 }
 
 .sidebarItem {
@@ -21,5 +26,12 @@
   background-color: var(--sidebar-item-hover);
 }
 .sidebarItem:active {
+  background-color: var(--sidebar-item-active);
+}
+
+.sideBarItemSelected {
+  background-color: var(--sidebar-item-active);
+}
+.sideBarItemSelected:hover {
   background-color: var(--sidebar-item-active);
 }

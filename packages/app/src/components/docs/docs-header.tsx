@@ -15,7 +15,7 @@ import { PackageSearchInput } from "./package-search-input";
 
 export const DocsHeader: React.FC<{
   packageName: string;
-  packageVersion: string;
+  packageVersion?: string;
 }> = props => {
   const { data: versions, error } = usePackageVersions(props.packageName);
   const { data: about } = useAboutPackage(props.packageName);
@@ -37,7 +37,13 @@ export const DocsHeader: React.FC<{
         }
       />
       {versions && (
-        <HeaderButton text={`@${props.packageVersion}`}>
+        <HeaderButton
+          text={
+            props.packageVersion
+              ? `@${props.packageVersion}`
+              : "Choose a version"
+          }
+        >
           {Object.entries(versions).map(([version, { time, built }]) => (
             <HeaderListButton
               key={version}
@@ -58,6 +64,8 @@ export const DocsHeader: React.FC<{
         <HeaderListButton>Bugs</HeaderListButton>
         <HeaderListButton>NPM Page</HeaderListButton>
         <HeaderListButton>Homepage</HeaderListButton>
+        <HeaderListButton>Bundlephobia</HeaderListButton>
+        <HeaderListButton>Packagephobia</HeaderListButton>
       </HeaderButton>
       {about?.maintainers?.length && (
         <HeaderButton text="Maintainers">

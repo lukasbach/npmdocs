@@ -4,5 +4,9 @@ import { getVersions } from "../../../src/github/get-versions";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName } = req.query;
   const fixedPackage = (packageName as string).replace(/__/g, "/");
-  res.status(200).json(await getVersions(fixedPackage));
+  const versions = await getVersions(fixedPackage);
+  const versionToRedirectTo =
+    Object.entries(versions).find(([version, { built }]) => built)?.[0] ??
+    Object.keys(versions)[0];
+  res.redirect(`/${packageName}/${versionToRedirectTo}`);
 };

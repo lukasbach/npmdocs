@@ -10,7 +10,7 @@ export const PackageSearchInput: FC = () => {
     return (
       suggestions?.map(suggestion => ({
         title: suggestion.name,
-        href: `/packages/${suggestion.name.replace("/", "__")}`,
+        href: `/${suggestion.name.replace("/", "__")}`,
       })) ?? []
     );
   }, [suggestions]);

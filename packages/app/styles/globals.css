@@ -39,7 +39,7 @@ a {
   --text-on-bg: var(--black);
   --text-on-header: var(--white);
 
-  --header-list-btn-hover: var(--dark-gray2);
+  --header-list-btn-hover: var(--dark-gray3);
 }
 
 .dark {
@@ -54,7 +54,7 @@ a {
   --text-on-bg: var(--white);
   --text-on-header: var(--white);
 
-  --header-list-btn-hover: var(--dark-gray2);
+  --header-list-btn-hover: var(--dark-gray3);
 }
 
 :root {

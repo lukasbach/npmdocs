@@ -1,0 +1,17 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { getFile } from "../../../../src/github/helpers";
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const { packageName, version } = req.query;
+  const fixedPackage = (packageName as string).replace(/__/g, "/");
+  const result = await getFile<any>(
+    `packages/${fixedPackage}/${version}/docs.json`
+  );
+
+  if (!result) {
+    res.status(404).end();
+    return;
+  }
+
+  res.status(200).end();
+};
