@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { fetcher } from "./api-helpers";
+import { commonSwrConfig, fetcher } from "./api-helpers";
 import { useEffect, useState } from "react";
 
 export const usePackageSuggestions = (typed: string) => {
@@ -11,7 +11,7 @@ export const usePackageSuggestions = (typed: string) => {
       version: string;
       date: string;
     }[]
-  >(`/api/suggestions?q=${delayedTyped}`, fetcher);
+  >(`/api/suggestions?q=${delayedTyped}`, fetcher, commonSwrConfig);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

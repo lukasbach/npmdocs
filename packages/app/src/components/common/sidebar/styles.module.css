@@ -22,6 +22,9 @@ h1.sidebarHeader {
   font-size: .9rem;
   padding: 2px 20px;
   cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis ellipsis;
 }
 .sidebarItem:hover {
   background-color: var(--sidebar-item-hover);

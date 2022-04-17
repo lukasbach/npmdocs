@@ -19,6 +19,7 @@ import {
 import { PackageSidebarItems } from "../package/package-sidebar-items";
 import { useRouterQuery } from "../../common/use-router-query";
 import { useHash } from "../../common/use-hash";
+import { usePkgQuery } from "../../common/use-pkg-query";
 
 const SidebarSection: React.FC<{
   docs: ITypescriptPluginData | undefined;
@@ -45,19 +46,14 @@ const SidebarSection: React.FC<{
 };
 
 export const DocsSidebar: React.FC<{
-  packageName: string;
-  packageVersion: string;
   currentKey?: string;
-}> = ({ packageName, packageVersion, currentKey }) => {
-  const { data: docs, error } = usePackageDocs(packageName, packageVersion);
+}> = ({ currentKey }) => {
+  const { version, encodedPackageName } = usePkgQuery();
+  const { data: docs, error } = usePackageDocs(encodedPackageName, version);
 
   return (
     <Sidebar>
-      <PackageSidebarItems
-        packageName={packageName}
-        version={packageVersion}
-        currentKey={currentKey}
-      />
+      <PackageSidebarItems currentKey={currentKey} />
       <SidebarSection docs={docs} guard={isTsClass} title="Classes" />
       <SidebarSection docs={docs} guard={isTsEnum} title="Enums" />
       <SidebarSection docs={docs} guard={isTsInterface} title="Interfaces" />

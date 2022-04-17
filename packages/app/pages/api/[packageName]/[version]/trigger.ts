@@ -24,6 +24,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName, version } = req.query;
   const fixedPackage = (packageName as string).replace(/__/g, "/");
 
+  // if (fixedPackage.startsWith("@types/")) {
+  //   res.status(400).json({
+  //     error:
+  //       "Dont trigger builds on definitely typed packages, run them directly on the code package.",
+  //   });
+  //   return;
+  // }
+
   const versions = await getVersions(fixedPackage);
   if (!Object.keys(versions).includes(version as string)) {
     console.log(versions, version, fixedPackage);

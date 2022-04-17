@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import { SidebarHeader } from "../common/sidebar/sidebar-header";
 import { SidebarItem } from "../common/sidebar/sidebar-item";
+import { usePkgQuery } from "../../common/use-pkg-query";
 
 const Item: FC<{
   children: ReactNode;
@@ -18,11 +19,10 @@ const Item: FC<{
 );
 
 export const PackageSidebarItems: FC<{
-  packageName: string;
-  version: string;
   currentKey?: string;
-}> = ({ packageName, version, currentKey }) => {
-  const common = { packageName, version, currentKey };
+}> = ({ currentKey }) => {
+  const { encodedPackageName, packageName, version } = usePkgQuery();
+  const common = { packageName: encodedPackageName, version, currentKey };
   return (
     <>
       <SidebarHeader as="h1">{packageName}</SidebarHeader>

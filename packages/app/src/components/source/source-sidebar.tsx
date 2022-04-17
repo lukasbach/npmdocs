@@ -84,12 +84,7 @@ export const SourceSidebar: FC<{}> = () => {
 
   return (
     <Sidebar>
-      <PackageSidebarItems
-        packageName={packageName}
-        version={version}
-        currentKey="source"
-      />
-
+      <PackageSidebarItems currentKey="source" />
       <SidebarHeader as="h2">Package Source</SidebarHeader>
       <Folder items={source.package as any} depth={0} parentPath={""} />
     </Sidebar>

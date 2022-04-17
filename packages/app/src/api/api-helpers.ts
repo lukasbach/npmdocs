@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { ITsDocBase, ITypescriptPluginData } from "@documentalist/client";
 import { useMemo } from "react";
+import { SWRConfiguration } from "swr/dist/types";
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -12,28 +13,47 @@ export const fetcher = async (url: string) => {
   return await res.json();
 };
 
+export const commonSwrConfig: SWRConfiguration = {
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+};
+
 export const usePackageVersions = (packageName: string) =>
   useSWR<Record<string, { time: string; built: boolean }>>(
     `/api/${packageName}/versions`,
-    fetcher
+    fetcher,
+    commonSwrConfig
   );
 
 export const useAboutPackage = (packageName: string) =>
-  useSWR<any>(`/api/${packageName}/about`, fetcher);
+  useSWR<any>(`/api/${packageName}/about`, fetcher, commonSwrConfig);
 
 export const useReadme = (packageName: string, version: string) =>
-  useSWR<any>(`/api/${packageName}/${version}/readme`, fetcher);
+  useSWR<any>(
+    `/api/${packageName}/${version}/readme`,
+    fetcher,
+    commonSwrConfig
+  );
 
 export const usePackageJson = (packageName: string, version: string) =>
-  useSWR<any>(`/api/${packageName}/${version}/packagejson`, fetcher);
+  useSWR<any>(
+    `/api/${packageName}/${version}/packagejson`,
+    fetcher,
+    commonSwrConfig
+  );
 
 export const usePackageDocs = (packageName: string, version: string) =>
-  useSWR<ITypescriptPluginData>(`/api/${packageName}/${version}/docs`, fetcher);
+  useSWR<ITypescriptPluginData>(
+    `/api/${packageName}/${version}/docs`,
+    fetcher,
+    commonSwrConfig
+  );
 
 export const usePackageSource = (packageName: string, version: string) =>
   useSWR<Record<string, true | object>>(
     `/api/${packageName}/${version}/folder`,
-    fetcher
+    fetcher,
+    commonSwrConfig
   );
 
 export type Typeguard<T extends ITsDocBase> = (data: any) => data is T;

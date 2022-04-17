@@ -12,13 +12,12 @@ import {
 } from "react-icons/io5";
 import { HeaderExpander } from "../common/header/header-expander";
 import { PackageSearchInput } from "./package-search-input";
+import { usePkgQuery } from "../../common/use-pkg-query";
 
-export const DocsHeader: React.FC<{
-  packageName: string;
-  packageVersion?: string;
-}> = props => {
-  const { data: versions, error } = usePackageVersions(props.packageName);
-  const { data: about } = useAboutPackage(props.packageName);
+export const DocsHeader: React.FC<{}> = props => {
+  const { version, encodedPackageName, packageName } = usePkgQuery();
+  const { data: versions, error } = usePackageVersions(encodedPackageName);
+  const { data: about } = useAboutPackage(encodedPackageName);
 
   return (
     <Header>
@@ -32,22 +31,16 @@ export const DocsHeader: React.FC<{
       <HeaderButton
         text={
           <>
-            <IoCubeOutline /> {props.packageName}
+            <IoCubeOutline /> {packageName}
           </>
         }
       />
       {versions && (
-        <HeaderButton
-          text={
-            props.packageVersion
-              ? `@${props.packageVersion}`
-              : "Choose a version"
-          }
-        >
+        <HeaderButton text={version ? `@${version}` : "Choose a version"}>
           {Object.entries(versions).map(([version, { time, built }]) => (
             <HeaderListButton
               key={version}
-              href={`/${props.packageName}/${version}`}
+              href={`/${encodedPackageName}/${version}`}
             >
               {built ? (
                 <IoPricetagSharp title="Documentation is built for this version" />

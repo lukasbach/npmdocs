@@ -36,6 +36,8 @@
 
 .signature {
   font-family: var(--font-mono);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .signature a {
   text-decoration: underline;
