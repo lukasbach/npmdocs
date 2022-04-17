@@ -19,7 +19,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           : packageAndVersion;
         const [packageName, version] =
           packageAndVersionWithoutPrefix.split("@");
-        return { package: `${scoped ? "@" : ""}${packageName}`, version };
+        return { packageName: `${scoped ? "@" : ""}${packageName}`, version };
       })
       .filter(v => !!v)
   );

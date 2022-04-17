@@ -56,6 +56,13 @@ export const usePackageSource = (packageName: string, version: string) =>
     commonSwrConfig
   );
 
+export const useRecentBuilds = () =>
+  useSWR<{ packageName: string; version: string }[]>(
+    "/api/recent-builds",
+    fetcher,
+    commonSwrConfig
+  );
+
 export type Typeguard<T extends ITsDocBase> = (data: any) => data is T;
 
 export const useFilteredDocsEntity = <T extends ITsDocBase>(

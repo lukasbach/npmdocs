@@ -27,6 +27,19 @@ a {
   --font-mono: monospace;
 }
 
+input {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+}
+input:focus {
+  outline-offset: 3px;
+  outline: var(--input-outline) solid 1px;
+}
+input::placeholder {
+  color: var(--input-text-placeholder);
+}
+
 .light {
   --primary: var(--indigo1); /*d49100*/
   --bg: var(--white);
@@ -40,6 +53,18 @@ a {
   --text-on-header: var(--white);
 
   --header-list-btn-hover: var(--dark-gray3);
+
+  --list-item-bg: var(--bg);
+  --list-item-text: var(--text-on-bg);
+  --list-item-bg-hover: var(--light-gray4);
+  --list-item-bg-active: var(--light-gray3);
+  --list-border: var(--light-gray1);
+
+  --input-bg: var(--bg);
+  --input-text: var(--text-on-bg);
+  --input-text-placeholder: var(--gray2);
+  --input-border: var(--light-gray1);
+  --input-outline: var(--gray4);
 }
 
 .dark {
@@ -55,6 +80,18 @@ a {
   --text-on-header: var(--white);
 
   --header-list-btn-hover: var(--dark-gray3);
+
+  --list-item-bg: var(--bg);
+  --list-item-text: var(--text-on-bg);
+  --list-item-bg-hover: var(--dark-gray3);
+  --list-item-bg-active: var(--dark-gray4);
+  --list-border: var(--dark-gray4);
+
+  --input-bg: var(--bg);
+  --input-text: var(--text-on-bg);
+  --input-text-placeholder: var(--gray4);
+  --input-border: var(--gray1);
+  --input-outline: var(--dark-gray5);
 }
 
 :root {

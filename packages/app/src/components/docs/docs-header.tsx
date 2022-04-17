@@ -13,6 +13,8 @@ import {
 import { HeaderExpander } from "../common/header/header-expander";
 import { PackageSearchInput } from "./package-search-input";
 import { usePkgQuery } from "../../common/use-pkg-query";
+import { HeaderRight } from "../shared/header/header-right";
+import { HeaderLeft } from "../shared/header/header-left";
 
 export const DocsHeader: React.FC<{}> = props => {
   const { version, encodedPackageName, packageName } = usePkgQuery();
@@ -21,13 +23,7 @@ export const DocsHeader: React.FC<{}> = props => {
 
   return (
     <Header>
-      <HeaderButton
-        text={
-          <>
-            <IoLibrarySharp /> npmdocs
-          </>
-        }
-      />
+      <HeaderLeft />
       <HeaderButton
         text={
           <>
@@ -70,9 +66,7 @@ export const DocsHeader: React.FC<{}> = props => {
         </HeaderButton>
       )}
       <HeaderExpander />
-      <PackageSearchInput />
-      <HeaderButton text="@lukasbach" />
-      <ColormodeButton />
+      <HeaderRight />
     </Header>
   );
 };

@@ -1,0 +1,35 @@
+.container {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.container > :last-child > li {
+  border-bottom: none;
+}
+
+.item {
+  display: flex;
+  background-color: var(--list-item-bg);
+  color: var(--list-item-text);
+  padding: 6px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--list-border);
+}
+
+.item:hover {
+  background-color: var(--list-item-bg-hover);
+}
+
+.item:active {
+  background-color: var(--list-item-bg-active);
+}
+
+.itemContent {
+  flex-grow: 1;
+}
+
+.itemRight {
+
+}
+
