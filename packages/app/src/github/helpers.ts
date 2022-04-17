@@ -57,6 +57,19 @@ export const getFolderContents = async (
   }
 };
 
+export const getRecentCommits = async (
+  count?: number,
+  author?: string
+): Promise<{ commit: { message: string } }[]> => {
+  const result = await kit().rest.repos.listCommits({
+    owner,
+    repo,
+    author,
+    per_page: count,
+  });
+  return result.data;
+};
+
 export const dispatchWorkflow = async (inputs: any): Promise<void> => {
   await kit().rest.actions.createWorkflowDispatch({
     owner,

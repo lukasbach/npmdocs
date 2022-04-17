@@ -1,0 +1,26 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { getRecentCommits } from "../../src/github/helpers";
+
+const skipTags = ["#failed", "#skiprecent"];
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const commits = await getRecentCommits(30, "npmdocs-noreply@lukasbach.com");
+  res.status(200).json(
+    commits
+      .map(commit => {
+        if (skipTags.some(tag => commit.commit.message.includes(tag))) {
+          return null;
+        }
+
+        const packageAndVersion = commit.commit.message.split(" ")[1];
+        const scoped = packageAndVersion.startsWith("@");
+        const packageAndVersionWithoutPrefix = scoped
+          ? packageAndVersion.substr(1)
+          : packageAndVersion;
+        const [packageName, version] =
+          packageAndVersionWithoutPrefix.split("@");
+        return { package: `${scoped ? "@" : ""}${packageName}`, version };
+      })
+      .filter(v => !!v)
+  );
+};
