@@ -1,6 +1,7 @@
 import React, { useState, FC, useEffect } from "react";
 import { usePopper } from "react-popper";
 import { IoChevronDownSharp } from "react-icons/io5";
+import Link from "next/link";
 
 import style from "./styles.module.css";
 
@@ -36,20 +37,29 @@ export const HeaderButton: FC<{
     };
   }, [isOpen, referenceElement, popperElement]);
 
+  const button = (
+    <Component
+      ref={hasPopover ? setReferenceElement : null}
+      onClick={() => {
+        setIsOpen(!isOpen);
+        props.onClick?.();
+      }}
+      className={style.headerBtn}
+    >
+      {props.text}
+      {hasPopover && <IoChevronDownSharp />}
+    </Component>
+  );
+
+  const wrappedButton = props.href ? (
+    <Link href={props.href}>{button}</Link>
+  ) : (
+    button
+  );
+
   return (
     <>
-      <Component
-        href={props.href}
-        ref={hasPopover ? setReferenceElement : null}
-        onClick={() => {
-          setIsOpen(!isOpen);
-          props.onClick?.();
-        }}
-        className={style.headerBtn}
-      >
-        {props.text}
-        {hasPopover && <IoChevronDownSharp />}
-      </Component>
+      {wrappedButton}
 
       {hasPopover && isOpen && (
         <div
