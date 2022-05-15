@@ -1,13 +1,37 @@
 #!/usr/bin/env node
 
-import { Documentalist, TypescriptPlugin } from "@documentalist/compiler";
-import { ensureDir, remove, writeJson, readdir, lstatSync } from "fs-extra";
+import { Application, TSConfigReader, TypeDocReader } from "typedoc";
+import {
+  ensureDir,
+  existsSync,
+  lstatSync,
+  readdir,
+  readJSON,
+  writeJson,
+  remove,
+} from "fs-extra";
 import { join } from "path";
 import { program } from "commander";
 import { compress } from "compress-json";
 import download from "download-tarball";
 
+const tsconfig: any = {
+  compilerOptions: {
+    target: "es5",
+    lib: ["dom", "es2018"],
+    esModuleInterop: true,
+    jsx: "react",
+    declaration: true,
+    module: "CommonJS",
+    skipLibCheck: true,
+    moduleResolution: "Node",
+  },
+  exclude: ["**/node_modules/**", "**/*.spec.ts", "**/*.spec.tsx"],
+  include: ["package/**/*.ts", "package/**/*.tsx"],
+};
+
 const tmpPath = "./tmp";
+const tsconfigPath = join(tmpPath, "tsconfig.json");
 
 const scanFolderStructure = async (currentFolder = tmpPath) => {
   const currentObj = {};
@@ -22,40 +46,115 @@ const scanFolderStructure = async (currentFolder = tmpPath) => {
   return currentObj;
 };
 
+const build = async (
+  packageName: string,
+  version: string,
+  target: string,
+  runId: string
+) => {
+  const packageNameWithoutScope = packageName.includes("@")
+    ? packageName.split("/", 2)[1]
+    : packageName;
+  await download({
+    url: `https://registry.npmjs.org/${packageName}/-/${packageNameWithoutScope}-${version}.tgz`,
+    dir: tmpPath,
+  });
+
+  await ensureDir(target);
+
+  const folderStructure = await scanFolderStructure();
+  const folderStructureCompressed = compress(folderStructure);
+  await writeJson(join(target, "folder.json"), folderStructureCompressed);
+
+  const packageJson = await readJSON(join(tmpPath, "package/package.json"));
+  const types = packageJson.types ?? packageJson.typings;
+
+  console.log(packageJson);
+  console.log(`Using types ${join(tmpPath, "package", types)}`);
+  console.log(`Using tsconfig from ${tsconfigPath}`);
+
+  if (!types) {
+    // TODO find @types package if not found here.
+    await writeJson(
+      join(target, "docs.json"),
+      compress({
+        error: "No types found in package.json",
+        errorCode: "no-types",
+      })
+    );
+    return;
+  }
+
+  if (!existsSync(tsconfigPath)) {
+    await writeJson(tsconfigPath, tsconfig);
+  }
+
+  const app = new Application();
+  app.options.addReader(new TypeDocReader());
+  app.options.addReader(new TSConfigReader());
+  app.bootstrap({
+    entryPoints: [join(tmpPath, "package", types)],
+    entryPointStrategy: "resolve",
+    tsconfig: tsconfigPath,
+    logger: console.log,
+    treatWarningsAsErrors: false,
+    excludeExternals: true,
+    excludePrivate: true,
+    excludeInternal: true,
+    excludeProtected: true,
+  });
+
+  // https://github.com/TypeStrong/typedoc/issues/1403#issuecomment-926422566
+  // const project = app.convert();
+  const project = app.converter.convert(app.getEntryPoints() ?? []);
+  await app.generateJson(project, join(tmpPath, "out.json"));
+  const docs = await readJSON(join(tmpPath, "out.json"));
+
+  const compressed = compress(
+    JSON.parse(JSON.stringify(docs).replaceAll("tmp/package", ""))
+  );
+  await writeJson(join(target, "docs.json"), compressed);
+
+  await remove(tmpPath);
+};
+
 program
   .argument("<package>", "package name")
   .argument("<version>", "package version")
   .argument("<target>", "target folder")
-  .action(async (packageName: string, version: string, target: string) => {
-    const packageNameWithoutScope = packageName.includes("@")
-      ? packageName.split("/", 2)[1]
-      : packageName;
-    await download({
-      url: `https://registry.npmjs.org/${packageName}/-/${packageNameWithoutScope}-${version}.tgz`,
-      dir: tmpPath,
-    });
+  .argument("[runId]", "github run id")
+  .action(
+    async (
+      packageName: string,
+      version: string,
+      target: string,
+      runId: string
+    ) => {
+      try {
+        await build(packageName, version, target, runId);
+      } catch (e) {
+        console.error("Error: ", e);
+        await writeJson(
+          join(target, "docs.json"),
+          compress({
+            error: "Build failed",
+            errorCode: "build-error",
+            details: e.message ?? e,
+          })
+        );
+      }
 
-    await ensureDir(target);
-
-    const folderStructure = await scanFolderStructure();
-    const folderStructureCompressed = compress(folderStructure);
-    await writeJson(join(target, "folder.json"), folderStructureCompressed);
-
-    const docs = await new Documentalist()
-      .use(
-        /\.tsx?$/,
-        new TypescriptPlugin({
-          verbose: true,
-          includeDeclarations: true,
-          excludePaths: ["^\\.\\."],
-        })
-      )
-      .documentGlobs("tmp/**/*");
-
-    const compressed = compress(JSON.parse(JSON.stringify(docs)));
-    await writeJson(join(target, "docs.json"), compressed);
-
-    await remove(tmpPath);
-  });
+      await writeJson(
+        join(target, "info.json"),
+        {
+          packageName,
+          version,
+          runId,
+          date: Date.now(),
+        },
+        { spaces: 2 }
+      );
+    }
+  );
 
 program.parse();
