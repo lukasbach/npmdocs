@@ -20,7 +20,7 @@ export const commonSwrConfig: SWRConfiguration = {
 
 export const usePackageVersions = (packageName: string) =>
   useSWR<Record<string, { time: string; built: boolean }>>(
-    `/api/${packageName}/versions`,
+    packageName && `/api/${packageName}/versions`,
     fetcher,
     commonSwrConfig
   );
@@ -30,28 +30,28 @@ export const useAboutPackage = (packageName: string) =>
 
 export const useReadme = (packageName: string, version: string) =>
   useSWR<any>(
-    `/api/${packageName}/${version}/readme`,
+    packageName && version && `/api/${packageName}/${version}/readme`,
     fetcher,
     commonSwrConfig
   );
 
 export const usePackageJson = (packageName: string, version: string) =>
   useSWR<any>(
-    `/api/${packageName}/${version}/packagejson`,
+    packageName && version && `/api/${packageName}/${version}/packagejson`,
     fetcher,
     commonSwrConfig
   );
 
 export const usePackageDocs = (packageName: string, version: string) =>
   useSWR<ITypescriptPluginData>(
-    `/api/${packageName}/${version}/docs`,
+    packageName && version && `/api/${packageName}/${version}/docs`,
     fetcher,
     commonSwrConfig
   );
 
 export const usePackageSource = (packageName: string, version: string) =>
   useSWR<Record<string, true | object>>(
-    `/api/${packageName}/${version}/folder`,
+    packageName && version && `/api/${packageName}/${version}/folder`,
     fetcher,
     commonSwrConfig
   );
