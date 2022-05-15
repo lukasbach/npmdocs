@@ -13,10 +13,7 @@ const Page: FC = () => {
   const { packageName, version } = usePkgQuery();
   const { data } = useReadme(packageName, version);
   return (
-    <LayoutContainer
-      header={<DocsHeader packageName={packageName} packageVersion={version} />}
-      sidebar={<SourceSidebar />}
-    >
+    <LayoutContainer header={<DocsHeader />} sidebar={<SourceSidebar />}>
       <Head>
         <title>{`${packageName}@${version}`} source</title>
       </Head>

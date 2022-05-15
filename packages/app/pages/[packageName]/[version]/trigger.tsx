@@ -34,9 +34,7 @@ const Page: FC = () => {
   }, [packageName, version]);
 
   return (
-    <LayoutContainer
-      header={<DocsHeader packageName={packageName} packageVersion={version} />}
-    >
+    <LayoutContainer header={<DocsHeader />}>
       <Head>
         <title>{`${packageName}@${version}`}</title>
       </Head>
