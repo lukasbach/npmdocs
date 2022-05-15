@@ -55,8 +55,17 @@ const build = async (
   const packageNameWithoutScope = packageName.includes("@")
     ? packageName.split("/", 2)[1]
     : packageName;
+
+  const url = `https://registry.npmjs.org/${packageName}/-/${packageNameWithoutScope}-${version}.tgz`;
+
+  console.log(
+    `Building package ${packageName}@${version} to ${target} (without scope: ${packageNameWithoutScope})`
+  );
+  console.log(`runId is ${runId}`);
+  console.log(`Using url ${url}`);
+
   await download({
-    url: `https://registry.npmjs.org/${packageName}/-/${packageNameWithoutScope}-${version}.tgz`,
+    url,
     dir: tmpPath,
   });
 
