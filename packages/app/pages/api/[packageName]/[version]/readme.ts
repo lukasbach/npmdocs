@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { setCacheHeader } from "../../_setCacheHeader";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName, version } = req.query;
@@ -15,6 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       error: "No readme found",
     });
   } else {
+    setCacheHeader(res);
     res.status(200).json({
       readme: versionWithReadme.readme,
     });

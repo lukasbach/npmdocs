@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getFile } from "../../../../src/github/helpers";
 import { decompress } from "compress-json";
+import { setCacheHeader } from "../../_setCacheHeader";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName, version } = req.query;
@@ -14,5 +15,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
+  setCacheHeader(res);
   res.status(200).json(decompress(result));
 };

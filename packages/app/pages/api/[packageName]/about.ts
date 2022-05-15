@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { oneDay, setCacheHeader } from "../_setCacheHeader";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName } = req.query;
@@ -6,6 +7,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await fetch(`https://registry.npmjs.org/${fixedPackage}`).then(
     res => res.json()
   );
+  setCacheHeader(res, oneDay);
   res.status(200).json({
     readme: data.readme,
     bugs: data.bugs,

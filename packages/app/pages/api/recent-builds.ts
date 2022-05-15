@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getRecentCommits } from "../../src/github/helpers";
+import { setCacheHeader } from "./_setCacheHeader";
 
 const skipTags = ["#failed", "#skiprecent"];
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const commits = await getRecentCommits(30, "npmdocs-noreply@lukasbach.com");
+  setCacheHeader(res, 60 * 2);
   res.status(200).json(
     commits
       .map(commit => {
