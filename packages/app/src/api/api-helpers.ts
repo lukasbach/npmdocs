@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { ITsDocBase, ITypescriptPluginData } from "@documentalist/client";
+import type { JSONOutput } from "typedoc";
 import { useMemo } from "react";
 import { SWRConfiguration } from "swr/dist/types";
 
@@ -43,7 +44,7 @@ export const usePackageJson = (packageName: string, version: string) =>
   );
 
 export const usePackageDocs = (packageName: string, version: string) =>
-  useSWR<ITypescriptPluginData>(
+  useSWR<JSONOutput.ProjectReflection>(
     packageName && version && `/api/${packageName}/${version}/docs`,
     fetcher,
     commonSwrConfig

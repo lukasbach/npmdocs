@@ -8,6 +8,7 @@ import { DocumentationDescription } from "./page-pieces/documentation-descriptio
 import style from "./page-pieces/styles.module.css";
 import { isTsTypeAlias } from "@documentalist/client";
 import { Signature } from "./page-pieces/signature";
+import { DocsProvider } from "./provider/docs-provider";
 
 export const DocsPage: React.FC = props => {
   const symbolDocs = useSymbolDocs();

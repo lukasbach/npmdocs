@@ -1,8 +1,8 @@
 import { useHash } from "../../common/use-hash";
-import { useDocs } from "./use-docs";
+import { useDocsDeprecated } from "./use-docs-deprecated";
 
 export const useSymbolDocs = () => {
   const symbol = useHash();
-  const docs = useDocs();
+  const docs = useDocsDeprecated();
   return docs?.[symbol];
 };

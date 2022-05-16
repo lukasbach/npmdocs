@@ -6,7 +6,7 @@ import {
   ITsDocBase,
 } from "@documentalist/client/lib/typescript";
 import { isTsMethod } from "@documentalist/client";
-import { useDocs } from "../use-docs";
+import { useDocsDeprecated } from "../use-docs-deprecated";
 import { getSignature } from "./get-signature";
 
 import style from "./styles.module.css";
@@ -26,7 +26,7 @@ const escapeHtml = unsafe => {
 };
 
 export const Signature: FC<{ item: ITsDocBase }> = ({ item }) => {
-  const docs = useDocs();
+  const docs = useDocsDeprecated();
 
   const linkedSignature = useMemo(() => {
     const signature = getSignature(item);

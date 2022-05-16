@@ -2,24 +2,13 @@ import * as React from "react";
 import { Sidebar } from "../common/sidebar/sidebar";
 import { SidebarHeader } from "../common/sidebar/sidebar-header";
 import { SidebarItem } from "../common/sidebar/sidebar-item";
-import {
-  Typeguard,
-  useFilteredDocsEntity,
-  usePackageDocs,
-} from "../../api/api-helpers";
-import { useMemo } from "react";
-import {
-  isTsClass,
-  isTsEnum,
-  isTsInterface,
-  isTsMethod,
-  isTsTypeAlias,
-  ITypescriptPluginData,
-} from "@documentalist/client";
+import { Typeguard, useFilteredDocsEntity } from "../../api/api-helpers";
+import { ITypescriptPluginData } from "@documentalist/client";
 import { PackageSidebarItems } from "../package/package-sidebar-items";
 import { useRouterQuery } from "../../common/use-router-query";
 import { useHash } from "../../common/use-hash";
-import { usePkgQuery } from "../../common/use-pkg-query";
+import { useDocs } from "./provider/use-docs";
+import { isNamespace } from "../../common/guards";
 
 const SidebarSection: React.FC<{
   docs: ITypescriptPluginData | undefined;
@@ -48,17 +37,49 @@ const SidebarSection: React.FC<{
 export const DocsSidebar: React.FC<{
   currentKey?: string;
 }> = ({ currentKey }) => {
-  const { version, encodedPackageName } = usePkgQuery();
-  const { data: docs, error } = usePackageDocs(encodedPackageName, version);
+  const {
+    moduleGroups,
+    groups,
+    docsBaseUrl,
+    route,
+    getRouteInNamespace,
+    hash,
+  } = useDocs();
 
   return (
     <Sidebar>
       <PackageSidebarItems currentKey={currentKey} />
-      <SidebarSection docs={docs} guard={isTsClass} title="Classes" />
-      <SidebarSection docs={docs} guard={isTsEnum} title="Enums" />
-      <SidebarSection docs={docs} guard={isTsInterface} title="Interfaces" />
-      <SidebarSection docs={docs} guard={isTsMethod} title="Methods" />
-      <SidebarSection docs={docs} guard={isTsTypeAlias} title="Type Aliases" />
+
+      <SidebarHeader as="h2">Exports</SidebarHeader>
+      <SidebarItem href={`/${docsBaseUrl}#`} selected={route.length === 0}>
+        Global Exports
+      </SidebarItem>
+      {groups.find(isNamespace).resolvedChildren.map(namespace => (
+        <SidebarItem
+          href={`/${docsBaseUrl}#${namespace.name}`}
+          key={namespace.name}
+          selected={route[0] === namespace.name}
+        >
+          {namespace.name}
+        </SidebarItem>
+      ))}
+
+      {moduleGroups
+        .filter(group => !isNamespace(group))
+        .map(({ title, resolvedChildren }) => (
+          <React.Fragment key={title}>
+            <SidebarHeader as="h2">{title}</SidebarHeader>
+            {resolvedChildren.map(({ name }) => (
+              <SidebarItem
+                href={getRouteInNamespace(name)}
+                key={name}
+                selected={hash.endsWith(name)}
+              >
+                {name}
+              </SidebarItem>
+            ))}
+          </React.Fragment>
+        ))}
     </Sidebar>
   );
 };
