@@ -41,7 +41,7 @@ export const SymbolItemDeprecated: FC<{ child: ITsDocBase }> = ({ child }) => {
               {child.name}: <SignatureDeprecated item={child} />
             </pre>
           )}
-          <Comment
+          {/*<Comment
             block={
               child.documentation ??
               (isTsMethod(symbolDocs)
@@ -57,7 +57,7 @@ export const SymbolItemDeprecated: FC<{ child: ITsDocBase }> = ({ child }) => {
                 </pre>
                 <Comment block={signature.documentation} />
               </div>
-            ))}
+            ))}*/}
         </div>
       )}
     </div>

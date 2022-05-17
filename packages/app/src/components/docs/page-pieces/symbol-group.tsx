@@ -4,6 +4,7 @@ import type { JSONOutput } from "typedoc";
 import { SymbolItem } from "./symbol-item";
 
 import style from "./styles.module.css";
+import { isContainerReflection } from "../../../common/guards";
 
 export const SymbolGroup: FC<{ group: JSONOutput.ReflectionGroup }> = ({
   group,
@@ -13,7 +14,9 @@ export const SymbolGroup: FC<{ group: JSONOutput.ReflectionGroup }> = ({
     <div>
       <h2>{group.title}</h2>
       {group.children.map(childId => {
-        const item = symbolDocs.children.find(child => child.id === childId);
+        const item =
+          isContainerReflection(symbolDocs) &&
+          symbolDocs.children.find(child => child.id === childId);
 
         if (!item) {
           return null;
