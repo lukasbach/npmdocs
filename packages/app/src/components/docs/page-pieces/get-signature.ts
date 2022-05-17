@@ -17,5 +17,5 @@ export const getSignature = (item: ITsDocBase) => {
     ? item.type
     : isTsTypeAlias(item)
     ? item.type
-    : "Unknown Signature";
+    : "Unknown SignatureDeprecated";
 };

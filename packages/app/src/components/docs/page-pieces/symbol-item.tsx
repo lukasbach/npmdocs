@@ -1,25 +1,23 @@
-import React, { FC, ReactNode, useState } from "react";
-import {
-  isTsEnumMember,
-  isTsProperty,
-  isTsSignature,
-  ITsDocBase,
-} from "@documentalist/client/lib/typescript";
+import React, { memo, useState } from "react";
+import type { JSONOutput } from "typedoc";
+
 import {
   IoChevronDownCircleSharp,
   IoChevronForwardCircleSharp,
 } from "react-icons/io5";
-import { isTsMethod } from "@documentalist/client";
-import { DocumentationDescription } from "./documentation-description";
-import { Signature } from "./signature";
 
 import style from "./item.module.css";
 import generalStyle from "./styles.module.css";
-import { useSymbolDocs } from "../use-symbol-docs";
+import { Comment } from "./comment";
+import { Signature } from "./signature";
 
-export const SymbolItem: FC<{ child: ITsDocBase }> = ({ child }) => {
+interface Props {
+  item: JSONOutput.DeclarationReflection;
+}
+
+export const SymbolItem = memo(function SymbolItem({ item }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const symbolDocs = useSymbolDocs();
+
   return (
     <div className={style.item}>
       <div className={style.head} onClick={() => setIsExpanded(!isExpanded)}>
@@ -30,36 +28,17 @@ export const SymbolItem: FC<{ child: ITsDocBase }> = ({ child }) => {
             <IoChevronForwardCircleSharp />
           )}
         </div>
-        <div className={style.name}>{child.name}:</div>
-        <Signature item={child} />
+        <div className={style.name}>{item.name}:</div>
+        <div className={style.inlineSignature}>
+          <Signature type={item} />
+        </div>
       </div>
 
       {isExpanded && (
         <div className={style.body}>
-          {!isTsMethod(child) && (
-            <pre className={generalStyle.codeblock}>
-              {child.name}: <Signature item={child} />
-            </pre>
-          )}
-          <DocumentationDescription
-            block={
-              child.documentation ??
-              (isTsMethod(symbolDocs)
-                ? symbolDocs.signatures[0].documentation
-                : undefined)
-            }
-          />
-          {isTsMethod(child) &&
-            child.signatures.map(signature => (
-              <div key={signature.name}>
-                <pre className={generalStyle.codeblock}>
-                  <Signature item={signature} />
-                </pre>
-                <DocumentationDescription block={signature.documentation} />
-              </div>
-            ))}
+          <Comment comment={item.comment ?? item.signatures?.[0]?.comment} />
         </div>
       )}
     </div>
   );
-};
+});

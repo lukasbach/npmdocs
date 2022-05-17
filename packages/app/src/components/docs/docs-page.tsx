@@ -3,38 +3,26 @@ import { DocsContainer } from "./page-pieces/docs-container";
 import { useSymbolDocs } from "./use-symbol-docs";
 import { SymbolTitle } from "./page-pieces/symbol-title";
 import { SymbolSection } from "./page-pieces/symbol-section";
-import { DocumentationDescription } from "./page-pieces/documentation-description";
+import { Comment } from "./page-pieces/comment";
 
 import style from "./page-pieces/styles.module.css";
 import { isTsTypeAlias } from "@documentalist/client";
-import { Signature } from "./page-pieces/signature";
+import { SignatureDeprecated } from "./page-pieces/signatureDeprecated";
 import { DocsProvider } from "./provider/docs-provider";
-
+import { useDocs } from "./provider/use-docs";
+import { SymbolGroup } from "./page-pieces/symbol-group";
 export const DocsPage: React.FC = props => {
-  const symbolDocs = useSymbolDocs();
-
-  if (!symbolDocs) {
-    return null;
-  }
+  const { symbolDocs } = useDocs();
 
   return (
     <DocsContainer>
       <SymbolTitle />
-      <DocumentationDescription block={symbolDocs.documentation} />
-      <SymbolSection title="Constructors" section="constructorType" />
-      <SymbolSection title="Properties" section="properties" />
-      <SymbolSection title="Methods" section="methods" />
-      <SymbolSection title="Accessors" section="accessors" />
-      <SymbolSection title="Members" section="members" />
-      <SymbolSection title="Signatures" section="signatures" />
 
-      {isTsTypeAlias(symbolDocs) && (
-        <pre className={style.codeblock}>
-          {symbolDocs.name} = <Signature item={symbolDocs} />
-        </pre>
-      )}
+      {symbolDocs.groups.map(group => (
+        <SymbolGroup group={group} key={group.title} />
+      ))}
 
-      {/*<pre>{JSON.stringify(symbolDocs, null, 2)}</pre>*/}
+      <pre>{JSON.stringify(symbolDocs, null, 2)}</pre>
     </DocsContainer>
   );
 };

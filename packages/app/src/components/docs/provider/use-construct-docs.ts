@@ -21,7 +21,9 @@ export const useConstructDocs = () => {
       ? []
       : [routeString];
 
-    const { moduleDocs, moduleRoute } = getModule(route, docs.data);
+    const { targetDocs: moduleDocs, targetRoute: moduleRoute } =
+      traverseContainer(route, docs.data, ReflectionKind.Namespace);
+    const { targetDocs: symbolDocs } = traverseContainer(route, docs.data);
 
     const moduleGroups = moduleDocs && getResolvedGroups(moduleDocs);
     const groups = docs.data && getResolvedGroups(docs.data);
@@ -36,6 +38,7 @@ export const useConstructDocs = () => {
       moduleDocs,
       moduleGroups,
       moduleRoute,
+      symbolDocs,
       groups,
       docsBaseUrl,
       getRouteInNamespace,
@@ -57,23 +60,30 @@ export const useConstructDocs = () => {
   return docsItems;
 };
 
-const getModule = (route: string[], docs?: JSONOutput.ContainerReflection) => {
+const traverseContainer = (
+  route: string[],
+  docs?: JSONOutput.ContainerReflection,
+  onlyTraverseReflectionKind?: ReflectionKind
+) => {
   if (!docs) {
     return {
-      moduleRoute: [],
-      moduleDocs: null,
+      targetRoute: [],
+      targetDocs: null,
     };
   }
 
-  const moduleRoute: string[] = [];
+  const targetRoute: string[] = [];
   let currentContainer = docs;
 
   for (const part of route) {
     const child = currentContainer.children?.find(
-      child => child.kind === ReflectionKind.Namespace && child.name === part
+      child =>
+        (onlyTraverseReflectionKind
+          ? child.kind === onlyTraverseReflectionKind
+          : true) && child.name === part
     );
     if (child) {
-      moduleRoute.push(part);
+      targetRoute.push(part);
       currentContainer = child;
     } else {
       break;
@@ -81,7 +91,7 @@ const getModule = (route: string[], docs?: JSONOutput.ContainerReflection) => {
   }
 
   return {
-    moduleRoute,
-    moduleDocs: currentContainer,
+    targetRoute,
+    targetDocs: currentContainer,
   };
 };

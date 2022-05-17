@@ -5,7 +5,7 @@ import { ITypescriptPluginData } from "@documentalist/client";
 import { Typeguard } from "../../../api/api-helpers";
 import { useSymbolDocs } from "../use-symbol-docs";
 import { AnyDocsSymbolChild } from "../../../common/types";
-import { SymbolItem } from "./symbol-item";
+import { SymbolItemDeprecated } from "./symbol-item-deprecated";
 import { getSignature } from "./get-signature";
 
 export const SymbolSection: FC<{
@@ -22,7 +22,10 @@ export const SymbolSection: FC<{
     <>
       <h2>{title}</h2>
       {(symbolDocs as any)[section]?.map(item => (
-        <SymbolItem child={item} key={item.name + getSignature(item)} />
+        <SymbolItemDeprecated
+          child={item}
+          key={item.name + getSignature(item)}
+        />
       ))}
     </>
   );

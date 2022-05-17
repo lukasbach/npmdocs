@@ -1,58 +1,275 @@
-import React, { FC, ReactNode, useMemo } from "react";
-import {
-  isTsEnumMember,
-  isTsProperty,
-  isTsSignature,
-  ITsDocBase,
-} from "@documentalist/client/lib/typescript";
-import { isTsMethod } from "@documentalist/client";
-import { useDocsDeprecated } from "../use-docs-deprecated";
-import { getSignature } from "./get-signature";
+import Link from "next/link";
+import React, { FC, memo, ReactNode } from "react";
+import type { JSONOutput } from "typedoc";
+import { useDocs } from "../provider/use-docs";
+import { ReflectionKind } from "../../../common/reflection-kind";
 
-import style from "./styles.module.css";
+import style from "./signature.module.css";
 
-const WORD_SEPARATORS = /([[\]<>() :.,]+)/g;
+interface Props {
+  type?:
+    | JSONOutput.SomeType
+    | JSONOutput.MappedType
+    | JSONOutput.TemplateLiteralType
+    | JSONOutput.NamedTupleMemberType
+    | JSONOutput.DeclarationReflection;
+  reference?: JSONOutput.ReferenceType;
+}
 
-const escapeHtml = unsafe => {
+const LinkTo: FC<{ name: string }> = ({ name }) => {
+  const { getRouteInNamespace } = useDocs();
   return (
-    unsafe
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      // eslint-disable-next-line quotes
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;")
+    <Link href={getRouteInNamespace(name)}>
+      <a className={style.link}>{name}</a>
+    </Link>
   );
 };
 
-export const Signature: FC<{ item: ITsDocBase }> = ({ item }) => {
-  const docs = useDocsDeprecated();
+const joinComponents = (components: ReactNode[], joiner: string) => (
+  <>
+    {components.map((component, index, array) => (
+      <React.Fragment key={index}>
+        {component}
+        {index !== array.length - 1 && joiner}
+      </React.Fragment>
+    ))}
+  </>
+);
 
-  const linkedSignature = useMemo(() => {
-    const signature = getSignature(item);
+export const Signature = memo(function Signature({ type, reference }: Props) {
+  const { symbolDocs, moduleDocs, docs } = useDocs();
+  console.log((type as any).name, type.type, (type as any).kind);
 
-    let updatedSignature = "";
-    for (const word of signature.split(WORD_SEPARATORS)) {
-      if (docs[word]) {
-        updatedSignature += `__START__${word}__END__`;
-      } else {
-        updatedSignature += `${word}`;
-      }
-    }
-    updatedSignature = escapeHtml(updatedSignature);
-    updatedSignature = updatedSignature.replace(
-      /__START__([^_]+)__END__/g,
-      // eslint-disable-next-line prettier/prettier
-      "<a href=\"#$1\">$1</a>"
+  if (!type) {
+    return null;
+  }
+
+  if (!type.type) {
+    return (
+      <ReflectionSignature
+        type={type as JSONOutput.DeclarationReflection}
+        reference={reference}
+      />
     );
+  }
 
-    return updatedSignature;
-  }, [docs, item]);
+  if (typeof type.type !== "string") {
+    return <Signature type={type.type} reference={reference} />;
+  }
 
-  return (
-    <span
-      className={style.signature}
-      dangerouslySetInnerHTML={{ __html: linkedSignature }}
-    />
-  );
-};
+  switch (type.type) {
+    case "array":
+      return (
+        <>
+          <Signature type={type.elementType} />
+          []
+        </>
+      );
+    case "conditional":
+      return (
+        <>
+          <Signature type={type.checkType} />
+          {type.extendsType && (
+            <>
+              extends <Signature type={type.extendsType} />
+            </>
+          )}
+          ? <Signature type={type.trueType} />
+          : <Signature type={type.falseType} />
+        </>
+      );
+    case "indexedAccess":
+      return (
+        <>
+          <Signature type={type.objectType} />[
+          <Signature type={type.indexType} />]
+        </>
+      );
+    case "inferred":
+      return (
+        <>
+          infer <LinkTo name={type.name} />
+        </>
+      );
+    case "intersection":
+      return joinComponents(
+        type.types.map((t, i, a) => <Signature key={i} type={t} />),
+        " & "
+      );
+    case "union":
+      return joinComponents(
+        type.types.map((t, i, a) => <Signature key={i} type={t} />),
+        " | "
+      );
+    case "intrinsic":
+      return <>{type.name}</>;
+    case "literal":
+      return typeof type.value === "string" ? (
+        <>&quot;{type.value}&quot;</>
+      ) : (
+        // <>{type.value?.toString()}</>
+        <>TODO</>
+      );
+    case "optional":
+      return (
+        <>
+          <Signature type={type.elementType} />?
+        </>
+      );
+    case "predicate":
+      return type.asserts ? (
+        <>
+          asserts <Signature type={type.targetType} />?
+        </>
+      ) : (
+        <>
+          {type.name} is <Signature type={type.targetType} />?
+        </>
+      );
+    case "query":
+      return (
+        <>
+          typeof <Signature type={type.queryType} />
+        </>
+      );
+    case "reference": {
+      if (type.id) {
+        const referencedSymbol =
+          symbolDocs.children?.find(s => s.id === type.id) ||
+          moduleDocs.children?.find(s => s.id === type.id) ||
+          docs.children?.find(s => s.id === type.id);
+        return referencedSymbol ? (
+          <Signature type={referencedSymbol} reference={type} />
+        ) : (
+          <>{type.qualifiedName ?? type.name}</>
+        );
+      }
+
+      return <>{type.qualifiedName ?? type.name}</>;
+    }
+    case "reflection":
+      return <ReflectionSignature type={type.declaration} />;
+    case "rest":
+      return (
+        <>
+          ...
+          <Signature type={type.elementType} />
+        </>
+      );
+    case "tuple":
+      return (
+        <>
+          [
+          {joinComponents(
+            type.elements.map((t, i, a) => <Signature key={i} type={t} />),
+            ", "
+          )}
+          ]
+        </>
+      );
+    case "typeOperator":
+      return (
+        <>
+          {type.operator}
+          <Signature type={type.target} />
+        </>
+      );
+    case "unknown":
+      return <>{type.name}</>;
+    case "mapped":
+      return (
+        <>
+          {"{"}
+          {type.readonlyModifier && `${type.readonlyModifier}readonly `}[$
+          {type.parameter} in <Signature type={type.parameterType} />]
+          {type.templateType.type === "optional" && "?"}
+          {type.optionalModifier}
+          {type.templateType.type === "optional" ? (
+            <Signature type={type.templateType.elementType} />
+          ) : (
+            <Signature type={type.templateType} />
+          )}
+          {"}"}
+        </>
+      );
+    case "template-literal":
+      return (
+        <>
+          {"`"}
+          {type.head}
+          {type.tail.map(([subtype, str], i) => (
+            <>
+              {"${"}
+              <Signature key={i} type={subtype} />
+              {"}"}
+              {str}
+            </>
+          ))}
+          {"`"}
+        </>
+      );
+    case "named-tuple-member":
+      // TODO
+      return <>[TYPE NOT RESOLVED]</>;
+  }
+});
+
+const ReflectionSignature = memo(function ReflectionSignature({
+  type,
+  reference,
+}: {
+  type: JSONOutput.DeclarationReflection;
+  reference?: JSONOutput.ReferenceType;
+}) {
+  switch (type.kind) {
+    case ReflectionKind.Interface:
+    case ReflectionKind.Class:
+
+    // TODO ?
+    case ReflectionKind.Project:
+    case ReflectionKind.Module:
+    case ReflectionKind.Namespace:
+    case ReflectionKind.Enum:
+    case ReflectionKind.Variable:
+    case ReflectionKind.Function:
+    case ReflectionKind.Constructor:
+    case ReflectionKind.Property:
+    case ReflectionKind.Method:
+    case ReflectionKind.CallSignature:
+    case ReflectionKind.IndexSignature:
+    case ReflectionKind.ConstructorSignature:
+    case ReflectionKind.Parameter:
+    case ReflectionKind.TypeLiteral:
+    case ReflectionKind.TypeParameter:
+    case ReflectionKind.Accessor:
+    case ReflectionKind.GetSignature:
+    case ReflectionKind.SetSignature:
+    case ReflectionKind.ObjectLiteral:
+    case ReflectionKind.TypeAlias:
+    case ReflectionKind.Event:
+    case ReflectionKind.Reference:
+      return (
+        <>
+          <LinkTo name={type.name} />
+          {reference?.typeArguments && (
+            <>
+              {"<"}
+              {joinComponents(
+                reference.typeArguments.map((arg, index) => (
+                  <Signature type={arg} key={index} />
+                )),
+                ", "
+              )}
+              {">"}
+            </>
+          )}
+        </>
+      );
+
+    case ReflectionKind.EnumMember:
+      return <>{type.defaultValue}</>;
+
+      return <>[TYPE NOT RESOLVED]</>;
+  }
+  return null;
+});

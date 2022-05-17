@@ -34,3 +34,10 @@
   border-left: 4px solid var(--text-on-bg);
   padding: 0 0 0 1rem;
 }
+
+.inlineSignature {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 20%;
+}
