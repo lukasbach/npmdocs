@@ -11,6 +11,7 @@ import { SignatureDeprecated } from "./page-pieces/signatureDeprecated";
 import { DocsProvider } from "./provider/docs-provider";
 import { useDocs } from "./provider/use-docs";
 import { SymbolGroup } from "./page-pieces/symbol-group";
+import { isContainerReflection } from "../../common/guards";
 export const DocsPage: React.FC = props => {
   const { symbolDocs } = useDocs();
 
@@ -18,9 +19,10 @@ export const DocsPage: React.FC = props => {
     <DocsContainer>
       <SymbolTitle />
 
-      {symbolDocs.groups.map(group => (
-        <SymbolGroup group={group} key={group.title} />
-      ))}
+      {isContainerReflection(symbolDocs) &&
+        symbolDocs.groups.map(group => (
+          <SymbolGroup group={group} key={group.title} />
+        ))}
 
       <pre>{JSON.stringify(symbolDocs, null, 2)}</pre>
     </DocsContainer>

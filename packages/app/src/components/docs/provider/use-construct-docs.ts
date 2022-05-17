@@ -5,6 +5,7 @@ import { useHash } from "../../../common/use-hash";
 import { usePackageDocs } from "../../../api/api-helpers";
 import { ReflectionKind } from "../../../common/reflection-kind";
 import { getResolvedGroups } from "../../../common/get-resolved-groups";
+import { isContainerReflection } from "../../../common/guards";
 
 export const useConstructDocs = () => {
   const { packageName, encodedPackageName, version } = usePkgQuery();
@@ -62,7 +63,7 @@ export const useConstructDocs = () => {
 
 const traverseContainer = (
   route: string[],
-  docs?: JSONOutput.ContainerReflection,
+  docs?: JSONOutput.Reflection,
   onlyTraverseReflectionKind?: ReflectionKind
 ) => {
   if (!docs) {
@@ -76,12 +77,14 @@ const traverseContainer = (
   let currentContainer = docs;
 
   for (const part of route) {
-    const child = currentContainer.children?.find(
-      child =>
-        (onlyTraverseReflectionKind
-          ? child.kind === onlyTraverseReflectionKind
-          : true) && child.name === part
-    );
+    const child =
+      isContainerReflection(currentContainer) &&
+      currentContainer.children.find(
+        child =>
+          (onlyTraverseReflectionKind
+            ? child.kind === onlyTraverseReflectionKind
+            : true) && child.name === part
+      );
     if (child) {
       targetRoute.push(part);
       currentContainer = child;

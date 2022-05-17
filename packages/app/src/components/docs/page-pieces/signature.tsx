@@ -5,6 +5,7 @@ import { useDocs } from "../provider/use-docs";
 import { ReflectionKind } from "../../../common/reflection-kind";
 
 import style from "./signature.module.css";
+import { isContainerReflection } from "../../../common/guards";
 
 interface Props {
   type?:
@@ -20,14 +21,19 @@ const LinkTo: FC<{ name: string }> = ({ name }) => {
   const { getRouteInNamespace } = useDocs();
   return (
     <Link href={getRouteInNamespace(name)}>
-      <a className={style.link}>{name}</a>
+      <a className={style.link} onClick={e => e.stopPropagation()}>
+        {name}
+      </a>
     </Link>
   );
 };
 
-const joinComponents = (components: ReactNode[], joiner: string) => (
+const joinComponents = (
+  components: ReactNode[] | undefined,
+  joiner: string
+) => (
   <>
-    {components.map((component, index, array) => (
+    {components?.map((component, index, array) => (
       <React.Fragment key={index}>
         {component}
         {index !== array.length - 1 && joiner}
@@ -44,10 +50,10 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
     return null;
   }
 
-  if (!type.type) {
+  if ((type as JSONOutput.Reflection).kind !== undefined) {
     return (
       <ReflectionSignature
-        type={type as JSONOutput.DeclarationReflection}
+        type={type as JSONOutput.Reflection}
         reference={reference}
       />
     );
@@ -135,9 +141,11 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
     case "reference": {
       if (type.id) {
         const referencedSymbol =
-          symbolDocs.children?.find(s => s.id === type.id) ||
-          moduleDocs.children?.find(s => s.id === type.id) ||
-          docs.children?.find(s => s.id === type.id);
+          (isContainerReflection(symbolDocs) &&
+            symbolDocs.children.find(s => s.id === type.id)) ||
+          (isContainerReflection(moduleDocs) &&
+            moduleDocs.children.find(s => s.id === type.id)) ||
+          docs.children.find(s => s.id === type.id);
         return referencedSymbol ? (
           <Signature type={referencedSymbol} reference={type} />
         ) : (
@@ -170,8 +178,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
     case "typeOperator":
       return (
         <>
-          {type.operator}
-          <Signature type={type.target} />
+          {type.operator} <Signature type={type.target} />
         </>
       );
     case "unknown":
@@ -218,58 +225,145 @@ const ReflectionSignature = memo(function ReflectionSignature({
   type,
   reference,
 }: {
-  type: JSONOutput.DeclarationReflection;
+  type: JSONOutput.Reflection;
   reference?: JSONOutput.ReferenceType;
 }) {
   switch (type.kind) {
     case ReflectionKind.Interface:
     case ReflectionKind.Class:
+    case ReflectionKind.EnumMember:
+    case ReflectionKind.Method:
+    case ReflectionKind.TypeParameter:
+    case ReflectionKind.Parameter:
+    case ReflectionKind.Property:
+    case ReflectionKind.Enum:
+    case ReflectionKind.TypeAlias:
+      return (
+        <DeclarationReflectionSignature type={type} reference={reference} />
+      );
 
-    // TODO ?
+    case ReflectionKind.CallSignature:
+      return <SignatureReflectionSignature type={type} reference={reference} />;
+
     case ReflectionKind.Project:
     case ReflectionKind.Module:
     case ReflectionKind.Namespace:
-    case ReflectionKind.Enum:
     case ReflectionKind.Variable:
     case ReflectionKind.Function:
     case ReflectionKind.Constructor:
-    case ReflectionKind.Property:
-    case ReflectionKind.Method:
-    case ReflectionKind.CallSignature:
     case ReflectionKind.IndexSignature:
     case ReflectionKind.ConstructorSignature:
-    case ReflectionKind.Parameter:
     case ReflectionKind.TypeLiteral:
-    case ReflectionKind.TypeParameter:
     case ReflectionKind.Accessor:
     case ReflectionKind.GetSignature:
     case ReflectionKind.SetSignature:
     case ReflectionKind.ObjectLiteral:
-    case ReflectionKind.TypeAlias:
     case ReflectionKind.Event:
     case ReflectionKind.Reference:
-      return (
-        <>
-          <LinkTo name={type.name} />
-          {reference?.typeArguments && (
-            <>
-              {"<"}
-              {joinComponents(
-                reference.typeArguments.map((arg, index) => (
-                  <Signature type={arg} key={index} />
-                )),
-                ", "
-              )}
-              {">"}
-            </>
-          )}
-        </>
-      );
-
-    case ReflectionKind.EnumMember:
-      return <>{type.defaultValue}</>;
-
       return <>[TYPE NOT RESOLVED]</>;
   }
   return null;
 });
+
+const DeclarationReflectionSignature = memo(
+  function DeclarationReflectionSignature({
+    type,
+    reference,
+  }: {
+    type: JSONOutput.DeclarationReflection;
+    reference?: JSONOutput.ReferenceType;
+  }) {
+    switch (type.kind) {
+      case ReflectionKind.Interface:
+      case ReflectionKind.Class:
+      case ReflectionKind.Enum:
+      case ReflectionKind.TypeAlias:
+        return (
+          <>
+            <LinkTo name={type.name} />
+            {reference?.typeArguments && (
+              <>
+                {"<"}
+                {joinComponents(
+                  reference.typeArguments.map((arg, index) => (
+                    <Signature type={arg} key={index} />
+                  )),
+                  ", "
+                )}
+                {">"}
+              </>
+            )}
+          </>
+        );
+
+      case ReflectionKind.EnumMember:
+        return <>{type.defaultValue}</>;
+
+      case ReflectionKind.Method:
+        return (
+          <ReflectionSignature
+            type={type.signatures[0]}
+            reference={reference}
+          />
+        );
+
+      case ReflectionKind.TypeParameter:
+        return <>{type.name}</>;
+
+      case ReflectionKind.Parameter:
+        return (
+          <>
+            {type.name}: <Signature type={type.type} />
+          </>
+        );
+
+      case ReflectionKind.Property:
+        return <Signature type={type.type} />;
+
+      default:
+        return null;
+    }
+  }
+);
+
+const SignatureReflectionSignature = memo(
+  function SignatureReflectionSignature({
+    type,
+    reference,
+  }: {
+    type: JSONOutput.SignatureReflection;
+    reference?: JSONOutput.ReferenceType;
+  }) {
+    switch (type.kind) {
+      case ReflectionKind.CallSignature:
+        return (
+          <>
+            {type.typeParameter && (
+              <>
+                {"<"}
+                {joinComponents(
+                  type.typeParameter.map(param => (
+                    <ReflectionSignature key={param.id} type={param} />
+                  )),
+                  ", "
+                )}
+                {">"}
+              </>
+            )}
+            (
+            {joinComponents(
+              type.parameters?.map(param => (
+                <ReflectionSignature key={param.id} type={param} />
+              )),
+              ", "
+            )}
+            ){" => "}
+            <Signature type={type.type} />
+          </>
+        );
+
+      default:
+        return null;
+    }
+  }
+);
