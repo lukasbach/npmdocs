@@ -1,3 +1,39 @@
 .link {
   text-decoration: underline;
 }
+
+.signatureBlockList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signatureBlockListItem {
+  background-color: var(--signature-block-bg);
+  font-family: var(--font-mono);
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.signatureBlockListItem:hover {
+  background-color: var(--signature-block-bg-hover);
+}
+
+.signatureBlockListItemSelected {
+  background-color: var(--signature-block-bg-selected);
+  cursor: default;
+}
+
+.signatureBlockListItemSelected:hover {
+  background-color: var(--signature-block-bg-selected);
+}
+
+.signatureBlockListButton {
+  background-color: transparent;
+  border: none;
+  display: block;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+}

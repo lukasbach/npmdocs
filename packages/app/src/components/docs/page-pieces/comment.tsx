@@ -4,20 +4,19 @@ import { Markdown } from "../../common/markdown";
 
 import style from "./styles.module.css";
 
-export const Comment: FC<{ comment?: JSONOutput.Comment }> = ({ comment }) => {
+export const Comment: FC<{ comment?: JSONOutput.Comment | string }> = ({
+  comment,
+}) => {
   if (!comment) {
     return null;
   }
   return (
     <div className={style.description}>
-      {(comment.text || comment.shortText) && (
+      {typeof comment === "string" ? (
+        <Markdown markdown={comment} />
+      ) : comment.text || comment.shortText ? (
         <Markdown markdown={comment.text ?? comment.shortText} />
-      )}
-      {comment.returns && (
-        <p>
-          Returns: <Markdown markdown={comment.returns} />
-        </p>
-      )}
+      ) : undefined}
     </div>
   );
 };

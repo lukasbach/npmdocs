@@ -3,9 +3,9 @@ import React, { FC, memo, ReactNode } from "react";
 import type { JSONOutput } from "typedoc";
 import { useDocs } from "../provider/use-docs";
 import { ReflectionKind } from "../../../common/reflection-kind";
+import { isContainerReflection } from "../../../common/guards";
 
 import style from "./signature.module.css";
-import { isContainerReflection } from "../../../common/guards";
 
 interface Props {
   type?:
@@ -153,7 +153,9 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
         );
       }
 
-      return <>{type.qualifiedName ?? type.name}</>;
+      return (
+        <DeclarationReflectionSignature type={type as any} reference={type} />
+      );
     }
     case "reflection":
       return <ReflectionSignature type={type.declaration} />;
@@ -238,11 +240,15 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.Property:
     case ReflectionKind.Enum:
     case ReflectionKind.TypeAlias:
+    case ReflectionKind.Constructor:
       return (
         <DeclarationReflectionSignature type={type} reference={reference} />
       );
 
     case ReflectionKind.CallSignature:
+    case ReflectionKind.ConstructorSignature:
+    case ReflectionKind.SetSignature:
+    case ReflectionKind.GetSignature:
       return <SignatureReflectionSignature type={type} reference={reference} />;
 
     case ReflectionKind.Project:
@@ -250,13 +256,9 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.Namespace:
     case ReflectionKind.Variable:
     case ReflectionKind.Function:
-    case ReflectionKind.Constructor:
     case ReflectionKind.IndexSignature:
-    case ReflectionKind.ConstructorSignature:
     case ReflectionKind.TypeLiteral:
     case ReflectionKind.Accessor:
-    case ReflectionKind.GetSignature:
-    case ReflectionKind.SetSignature:
     case ReflectionKind.ObjectLiteral:
     case ReflectionKind.Event:
     case ReflectionKind.Reference:
@@ -274,32 +276,11 @@ const DeclarationReflectionSignature = memo(
     reference?: JSONOutput.ReferenceType;
   }) {
     switch (type.kind) {
-      case ReflectionKind.Interface:
-      case ReflectionKind.Class:
-      case ReflectionKind.Enum:
-      case ReflectionKind.TypeAlias:
-        return (
-          <>
-            <LinkTo name={type.name} />
-            {reference?.typeArguments && (
-              <>
-                {"<"}
-                {joinComponents(
-                  reference.typeArguments.map((arg, index) => (
-                    <Signature type={arg} key={index} />
-                  )),
-                  ", "
-                )}
-                {">"}
-              </>
-            )}
-          </>
-        );
-
       case ReflectionKind.EnumMember:
         return <>{type.defaultValue}</>;
 
       case ReflectionKind.Method:
+      case ReflectionKind.Constructor:
         return (
           <ReflectionSignature
             type={type.signatures[0]}
@@ -320,8 +301,28 @@ const DeclarationReflectionSignature = memo(
       case ReflectionKind.Property:
         return <Signature type={type.type} />;
 
+      case ReflectionKind.Interface:
+      case ReflectionKind.Class:
+      case ReflectionKind.Enum:
+      case ReflectionKind.TypeAlias:
       default:
-        return null;
+        return (
+          <>
+            <LinkTo name={type.name} />
+            {reference?.typeArguments && (
+              <>
+                {"<"}
+                {joinComponents(
+                  reference.typeArguments.map((arg, index) => (
+                    <Signature type={arg} key={index} />
+                  )),
+                  ", "
+                )}
+                {">"}
+              </>
+            )}
+          </>
+        );
     }
   }
 );
@@ -336,6 +337,9 @@ const SignatureReflectionSignature = memo(
   }) {
     switch (type.kind) {
       case ReflectionKind.CallSignature:
+      case ReflectionKind.ConstructorSignature:
+      case ReflectionKind.SetSignature:
+      case ReflectionKind.GetSignature:
         return (
           <>
             {type.typeParameter && (

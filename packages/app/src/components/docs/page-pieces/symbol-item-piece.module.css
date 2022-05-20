@@ -1,0 +1,15 @@
+.titleBlock {
+  margin: 0;
+}
+
+.titleContent {
+  font-size: 1rem;
+}
+
+.signature {
+  font-family: var(--font-mono);
+}
+
+.list {
+  margin: 8px 0;
+}

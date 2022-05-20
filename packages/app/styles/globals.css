@@ -22,11 +22,6 @@ a {
   box-sizing: border-box;
 }
 
-.light, .dark {
-  --header-list-bg: var(--header);
-  --font-mono: monospace;
-}
-
 input {
   background-color: var(--input-bg);
   color: var(--input-text);
@@ -38,6 +33,11 @@ input:focus {
 }
 input::placeholder {
   color: var(--input-text-placeholder);
+}
+
+.light, .dark {
+  --header-list-bg: var(--header);
+  --font-mono: monospace;
 }
 
 .light {
@@ -65,6 +65,11 @@ input::placeholder {
   --input-text-placeholder: var(--gray2);
   --input-border: var(--light-gray1);
   --input-outline: var(--gray4);
+
+  --signature-block-bg: var(--light-gray5);
+  --signature-block-bg-hover: var(--light-gray4);
+  --signature-block-bg-selected: var(--light-gray3);
+  --docs-item-detail-line-text: var(--gray3);
 }
 
 .dark {
@@ -92,6 +97,11 @@ input::placeholder {
   --input-text-placeholder: var(--gray4);
   --input-border: var(--gray1);
   --input-outline: var(--dark-gray5);
+
+  --signature-block-bg: var(--gray3);
+  --signature-block-bg-hover: var(--gray2);
+  --signature-block-bg-selected: var(--gray1);
+  --docs-item-detail-line-text: var(--gray3);
 }
 
 :root {

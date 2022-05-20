@@ -41,3 +41,13 @@
   white-space: nowrap;
   margin-left: 20%;
 }
+
+.details {
+  margin-top: 8px;
+}
+
+.detailLine {
+  color: var(--docs-item-detail-line-text);
+  margin: 0;
+  font-size: .8rem;
+}
