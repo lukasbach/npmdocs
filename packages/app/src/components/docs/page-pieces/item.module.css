@@ -26,7 +26,11 @@
 
 .name {
   font-family: var(--font-mono);
+}
+
+.flags {
   flex-grow: 1;
+  margin-left: 8px;
 }
 
 .body {

@@ -5,6 +5,7 @@ import { Comment } from "./comment";
 import { isParameter, isReflection } from "../../../common/guards";
 
 import style from "./symbol-item-piece.module.css";
+import { FlagList } from "./flag-list";
 
 export const SymbolItemPiece: FC<{
   pieceReflection?: JSONOutput.Reflection | JSONOutput.SomeType;
@@ -29,6 +30,9 @@ export const SymbolItemPiece: FC<{
           <span className={style.signature}>
             <Signature type={pieceReflection} />
           </span>
+          <FlagList
+            flags={isReflection(pieceReflection) && pieceReflection.flags}
+          />
         </span>
         {commentToDisplay && (
           <p>

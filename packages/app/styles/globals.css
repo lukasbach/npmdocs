@@ -38,6 +38,9 @@ input::placeholder {
 .light, .dark {
   --header-list-bg: var(--header);
   --font-mono: monospace;
+
+  --flag-bg: var(--text-on-bg);
+  --flag-text: var(--bg);
 }
 
 .light {

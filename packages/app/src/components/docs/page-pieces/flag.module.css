@@ -1,0 +1,16 @@
+.flag {
+  background-color: var(--flag-bg);
+  color: var(--flag-text);
+  border-radius: 9999px;
+  font-size: .65rem;
+  padding: 2px 6px;
+  margin-right: 4px;
+}
+
+.list {
+  display: flex;
+}
+
+.listInline {
+  display: inline-flex;
+}

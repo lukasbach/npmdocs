@@ -15,10 +15,12 @@ import {
   isConstructor,
   isConstructorSignature,
   isMethod,
+  isReflection,
 } from "../../../common/guards";
 import { SymbolItemPiece } from "./symbol-item-piece";
 
 import style from "./item.module.css";
+import { FlagList } from "./flag-list";
 
 interface Props {
   item: JSONOutput.DeclarationReflection;
@@ -43,6 +45,9 @@ export const SymbolItem = memo(function SymbolItem({ item }: Props) {
           )}
         </div>
         <div className={style.name}>{item.name}:</div>
+        <div className={style.flags}>
+          <FlagList flags={isReflection(selectedType) && selectedType.flags} />
+        </div>
         <div className={style.inlineSignature}>
           <Signature type={item} />
         </div>
@@ -130,6 +135,8 @@ export const SymbolItem = memo(function SymbolItem({ item }: Props) {
               </div>
             </>
           )}
+
+          <FlagList flags={isReflection(selectedType) && selectedType.flags} />
         </div>
       )}
     </div>
