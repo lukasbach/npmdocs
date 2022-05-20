@@ -11,9 +11,11 @@ import { SignatureBlock } from "./signature-block";
 import { ReflectionKind } from "../../../common/reflection-kind";
 import { SymbolItemPiecelist } from "./symbol-item-piecelist";
 import {
+  hasSignatures,
   isCallSignature,
   isConstructor,
   isConstructorSignature,
+  isFunction,
   isMethod,
   isReflection,
 } from "../../../common/guards";
@@ -29,10 +31,9 @@ interface Props {
 export const SymbolItem = memo(function SymbolItem({ item }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedSignature, setSelectedSignature] = useState(0);
-  const selectedType =
-    isMethod(item) || isConstructor(item)
-      ? item.signatures[selectedSignature]
-      : item;
+  const selectedType = hasSignatures(item)
+    ? item.signatures[selectedSignature]
+    : item;
 
   return (
     <div className={style.item}>

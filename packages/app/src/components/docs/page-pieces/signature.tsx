@@ -77,7 +77,8 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
           <Signature type={type.checkType} />
           {type.extendsType && (
             <>
-              extends <Signature type={type.extendsType} />
+              {" "}
+              extends <Signature type={type.extendsType} />{" "}
             </>
           )}
           ? <Signature type={type.trueType} />
@@ -191,7 +192,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
           {"{"}
           {type.readonlyModifier && `${type.readonlyModifier}readonly `}[$
           {type.parameter} in <Signature type={type.parameterType} />]
-          {type.templateType.type === "optional" && "?"}
+          {type.templateType.type === "optional" && "?"}:{" "}
           {type.optionalModifier}
           {type.templateType.type === "optional" ? (
             <Signature type={type.templateType.elementType} />
@@ -241,6 +242,7 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.Enum:
     case ReflectionKind.TypeAlias:
     case ReflectionKind.Constructor:
+    case ReflectionKind.Function:
       return (
         <DeclarationReflectionSignature type={type} reference={reference} />
       );
@@ -255,7 +257,6 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.Module:
     case ReflectionKind.Namespace:
     case ReflectionKind.Variable:
-    case ReflectionKind.Function:
     case ReflectionKind.IndexSignature:
     case ReflectionKind.TypeLiteral:
     case ReflectionKind.Accessor:
@@ -281,6 +282,7 @@ const DeclarationReflectionSignature = memo(
 
       case ReflectionKind.Method:
       case ReflectionKind.Constructor:
+      case ReflectionKind.Function:
         return (
           <ReflectionSignature
             type={type.signatures[0]}
