@@ -6,7 +6,12 @@ import style from "./signature.module.css";
 import { hasSignatures, isReflection } from "../../../common/guards";
 
 export const SignatureBlock: FC<{
-  item: JSONOutput.DeclarationReflection | JSONOutput.SomeType;
+  item:
+    | JSONOutput.SomeType
+    | JSONOutput.MappedType
+    | JSONOutput.TemplateLiteralType
+    | JSONOutput.NamedTupleMemberType
+    | JSONOutput.DeclarationReflection;
   selectedSignature?: number;
   setSelectedSignature?: (signatureIndex: number) => void;
 }> = ({ item, selectedSignature, setSelectedSignature }) => {

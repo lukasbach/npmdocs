@@ -30,6 +30,6 @@
 }
 
 .itemRight {
-
+  color: var(--list-item-text-muted);
 }
 

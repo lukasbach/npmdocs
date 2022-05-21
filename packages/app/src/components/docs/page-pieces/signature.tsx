@@ -44,7 +44,6 @@ const joinComponents = (
 
 export const Signature = memo(function Signature({ type, reference }: Props) {
   const { symbolDocs, moduleDocs, docs } = useDocs();
-  console.log((type as any).name, type.type, (type as any).kind);
 
   if (!type) {
     return null;

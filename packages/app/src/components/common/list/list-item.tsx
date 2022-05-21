@@ -7,9 +7,10 @@ export const ListItem: FC<{
   children: ReactNode;
   right?: ReactNode;
   href?: string;
-}> = ({ children, right, href }) => {
+  onClick?: () => void;
+}> = ({ children, right, href, onClick }) => {
   const content = (
-    <li className={style.item}>
+    <li className={style.item} onClick={onClick}>
       <div className={style.itemContent}>{children}</div>
       {right && <div className={style.itemRight}>{right}</div>}
     </li>

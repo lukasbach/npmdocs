@@ -9,7 +9,6 @@ const Page: FC = () => {
   const { packageName, version } = useRouterQuery();
   const hasStarted = useRef(false);
 
-  console.log(packageName, version);
   useEffect(() => {
     if (!packageName || !version || hasStarted.current) {
       return;

@@ -61,6 +61,7 @@ input::placeholder {
   --list-item-text: var(--text-on-bg);
   --list-item-bg-hover: var(--light-gray4);
   --list-item-bg-active: var(--light-gray3);
+  --list-item-text-muted: var(--gray2);
   --list-border: var(--light-gray1);
 
   --input-bg: var(--bg);
@@ -93,6 +94,7 @@ input::placeholder {
   --list-item-text: var(--text-on-bg);
   --list-item-bg-hover: var(--dark-gray3);
   --list-item-bg-active: var(--dark-gray4);
+  --list-item-text-muted: var(--gray3);
   --list-border: var(--dark-gray4);
 
   --input-bg: var(--bg);
