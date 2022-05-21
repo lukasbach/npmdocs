@@ -3,6 +3,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { vs } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import { useHash } from "../../common/use-hash";
 import { usePkgQuery } from "../../common/use-pkg-query";
+import NProgress from "nprogress";
 
 import style from "./styles.module.css";
 
@@ -15,11 +16,18 @@ export const CodeView: FC = () => {
     if (!packageName || !version || !hash) {
       return;
     }
+    NProgress.start();
 
     fetch(`https://unpkg.com/${packageName}@${version}/${hash}`)
       .then(res => res.text())
-      .then(setCode)
-      .catch(e => setCode("Error fetching code: " + e.message));
+      .then(code => {
+        setCode(code);
+        NProgress.done();
+      })
+      .catch(e => {
+        setCode("Error fetching code: " + e.message);
+        NProgress.done();
+      });
   }, [hash, packageName, version]);
 
   const language = useMemo(() => {

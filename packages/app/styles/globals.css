@@ -198,3 +198,8 @@ input::placeholder {
   --sepia4: #af855a;
   --sepia5: #d0b090;
 }
+
+
+#nprogress .bar {
+  background-color: white !important;
+}

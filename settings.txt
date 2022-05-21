@@ -1,0 +1,8 @@
+container width
+dark/light mode
+
+sort enum members after value
+hide inherited members
+always have all accordions opened
+hide flags in item lists
+when jumping to source, attempt to resolve github source
