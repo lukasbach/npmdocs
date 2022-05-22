@@ -27,7 +27,7 @@ const tsconfig: any = {
     moduleResolution: "Node",
   },
   exclude: ["**/node_modules/**", "**/*.spec.ts", "**/*.spec.tsx"],
-  include: ["package/**/*.ts", "package/**/*.tsx"],
+  include: ["**/*.ts", "**/*.tsx"],
 };
 
 const tmpPath = "./tmp";
@@ -52,6 +52,8 @@ const build = async (
   target: string,
   runId: string
 ) => {
+  await remove(tmpPath);
+
   const packageNameWithoutScope = packageName.includes("@")
     ? packageName.split("/", 2)[1]
     : packageName;
@@ -69,17 +71,22 @@ const build = async (
     dir: tmpPath,
   });
 
+  console.log(`Downloaded to ${tmpPath}`);
+
   await ensureDir(target);
 
   const folderStructure = await scanFolderStructure();
   const folderStructureCompressed = compress(folderStructure);
   await writeJson(join(target, "folder.json"), folderStructureCompressed);
 
-  const packageJson = await readJSON(join(tmpPath, "package/package.json"));
+  const packageFolder = (await readdir(tmpPath))[0];
+
+  const packageJson = await readJSON(
+    join(tmpPath, packageFolder, "package.json")
+  );
   const types = packageJson.types ?? packageJson.typings;
 
-  console.log(packageJson);
-  console.log(`Using types ${join(tmpPath, "package", types)}`);
+  console.log(`Using types ${join(tmpPath, packageFolder, types)}`);
   console.log(`Using tsconfig from ${tsconfigPath}`);
 
   if (!types) {
@@ -102,7 +109,7 @@ const build = async (
   app.options.addReader(new TypeDocReader());
   app.options.addReader(new TSConfigReader());
   app.bootstrap({
-    entryPoints: [join(tmpPath, "package", types)],
+    entryPoints: [join(tmpPath, packageFolder, types)],
     entryPointStrategy: "resolve",
     tsconfig: tsconfigPath,
     logger: console.log,
@@ -111,10 +118,11 @@ const build = async (
     excludePrivate: true,
     excludeInternal: true,
     excludeProtected: true,
+    exclude: ["**/node_modules/**"],
   });
 
   // https://github.com/TypeStrong/typedoc/issues/1403#issuecomment-926422566
-  // const project = app.convert();
+  // const project = app.convert()!;
   const project = app.converter.convert(app.getEntryPoints() ?? []);
   await app.generateJson(project, join(tmpPath, "out.json"));
   const docs = await readJSON(join(tmpPath, "out.json"));
