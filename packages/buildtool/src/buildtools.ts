@@ -127,6 +127,8 @@ const build = async (
   await app.generateJson(project, join(tmpPath, "out.json"));
   const docs = await readJSON(join(tmpPath, "out.json"));
 
+  // TODO filter out namespaces with the name "export=", see @types/react 18.0.2
+
   const compressed = compress(
     JSON.parse(JSON.stringify(docs).replaceAll("tmp/package", ""))
   );
