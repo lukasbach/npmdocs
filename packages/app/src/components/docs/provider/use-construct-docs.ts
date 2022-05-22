@@ -32,7 +32,7 @@ export const useConstructDocs = () => {
     const moduleGroups = moduleDocs && getResolvedGroups(moduleDocs);
     const groups = docs.data && getResolvedGroups(docs.data);
 
-    const docsBaseUrl = `${packageName}/${version}/`;
+    const docsBaseUrl = `${encodedPackageName}/${version}/`;
     const getRouteInNamespace = (name: string) =>
       "#" + [...moduleRoute, name].join(".");
 
