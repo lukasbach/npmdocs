@@ -6,7 +6,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName, version } = req.query;
   const fixedPackage = (packageName as string).replace(/__/g, "/");
   const result = await getFile<any>(
-    `packages/${fixedPackage}/${version}/docs.json`
+    `packages/${fixedPackage}/${version}/docs.json`,
+    false
   );
 
   if (!result) {

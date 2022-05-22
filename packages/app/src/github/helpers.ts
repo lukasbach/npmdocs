@@ -17,10 +17,19 @@ export const getFile = async <T extends string | object = string>(
       path,
       ref: targetBranch,
     });
-    const content = Buffer.from(
+    let content = Buffer.from(
       (result.data as components["schemas"]["content-file"]).content,
       "base64"
     ).toString();
+
+    if (!content) {
+      content = await (
+        await fetch(
+          (result.data as components["schemas"]["content-file"]).download_url
+        )
+      ).text();
+    }
+
     if (parseJson) {
       return JSON.parse(content);
     } else {

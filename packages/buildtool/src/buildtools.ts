@@ -132,7 +132,7 @@ const build = async (
   );
   await writeJson(join(target, "docs.json"), compressed);
 
-  await remove(tmpPath);
+  // await remove(tmpPath);
 };
 
 program
