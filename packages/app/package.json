@@ -11,6 +11,7 @@
     "@documentalist/client": "^4.0.0",
     "@octokit/rest": "^18.12.0",
     "@popperjs/core": "^2.11.5",
+    "@reach/dialog": "^0.17.0",
     "compress-json": "^2.0.1",
     "dompurify": "^2.3.6",
     "marked": "^4.0.14",

@@ -74,6 +74,10 @@ input::placeholder {
   --signature-block-bg-hover: var(--light-gray4);
   --signature-block-bg-selected: var(--light-gray3);
   --docs-item-detail-line-text: var(--gray3);
+
+  --search-item-bg: var(--bg);
+  --search-item-bg-hover: var(--light-gray1);
+  --search-item-text: var(--text-on-bg);
 }
 
 .dark {
@@ -107,6 +111,10 @@ input::placeholder {
   --signature-block-bg-hover: var(--gray2);
   --signature-block-bg-selected: var(--gray1);
   --docs-item-detail-line-text: var(--gray3);
+
+  --search-item-bg: var(--bg);
+  --search-item-bg-hover: var(--dark-gray1);
+  --search-item-text: var(--text-on-bg);
 }
 
 :root {

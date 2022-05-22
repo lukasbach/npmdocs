@@ -6,3 +6,8 @@ hide inherited members
 always have all accordions opened
 hide flags in item lists
 when jumping to source, attempt to resolve github source
+
+searchoptions:
+dont include container items like methods and parameters
+check case
+check full path

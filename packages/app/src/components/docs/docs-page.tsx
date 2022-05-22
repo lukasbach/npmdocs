@@ -11,6 +11,7 @@ import {
 import { Comment } from "./page-pieces/comment";
 import { SymbolItem } from "./page-pieces/symbol-item";
 import { SignatureBlock } from "./page-pieces/signature-block";
+import { Search } from "../search/search";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs } = useDocs();
@@ -28,7 +29,7 @@ export const DocsPage: React.FC = props => {
       {isFunction(symbolDocs) && <SymbolItem item={symbolDocs} />}
       {isTypeAlias(symbolDocs) && <SignatureBlock item={symbolDocs.type} />}
 
-      <pre>{JSON.stringify(symbolDocs, null, 2)}</pre>
+      {/*<pre>{JSON.stringify(symbolDocs, null, 2)}</pre>*/}
     </DocsContainer>
   );
 };

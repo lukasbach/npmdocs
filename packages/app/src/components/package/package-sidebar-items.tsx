@@ -2,6 +2,7 @@ import React, { FC, ReactNode } from "react";
 import { SidebarHeader } from "../common/sidebar/sidebar-header";
 import { SidebarItem } from "../common/sidebar/sidebar-item";
 import { usePkgQuery } from "../../common/use-pkg-query";
+import { useEventBus } from "../../common/use-event-bus";
 
 const Item: FC<{
   children: ReactNode;
@@ -22,6 +23,7 @@ export const PackageSidebarItems: FC<{
   currentKey?: string;
 }> = ({ currentKey }) => {
   const { encodedPackageName, packageName, version } = usePkgQuery();
+  const onOpenSearch = useEventBus("search");
   const common = { packageName: encodedPackageName, version, currentKey };
   return (
     <>
@@ -44,6 +46,7 @@ export const PackageSidebarItems: FC<{
       <Item {...common} itemKey="badges">
         Badges
       </Item>
+      <SidebarItem onClick={onOpenSearch}>Search symbol...</SidebarItem>
     </>
   );
 };

@@ -6,11 +6,13 @@ import { usePackageDocs } from "../../../api/api-helpers";
 import { ReflectionKind } from "../../../common/reflection-kind";
 import { getResolvedGroups } from "../../../common/get-resolved-groups";
 import { isContainerReflection } from "../../../common/guards";
+import { useConstructLookupMap } from "./use-construct-lookup-map";
 
 export const useConstructDocs = () => {
   const { packageName, encodedPackageName, version } = usePkgQuery();
   const hash = useHash();
   const docs = usePackageDocs(packageName, version);
+  const lookupMap = useConstructLookupMap(docs.data);
 
   const additionals = useMemo(() => {
     const [routeString, jumpToHighlight] = hash?.includes(":")
@@ -22,6 +24,7 @@ export const useConstructDocs = () => {
       ? []
       : [routeString];
 
+    console.log("!", docs.data);
     const { targetDocs: moduleDocs, targetRoute: moduleRoute } =
       traverseContainer(route, docs.data, ReflectionKind.Namespace);
     const { targetDocs: symbolDocs } = traverseContainer(route, docs.data);
@@ -48,6 +51,7 @@ export const useConstructDocs = () => {
 
   const docsItems = {
     ...additionals,
+    lookupMap,
     packageName,
     encodedPackageName,
     version,

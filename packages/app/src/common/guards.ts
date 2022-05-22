@@ -14,6 +14,7 @@ export const isClass = createReflG<JO.DeclarationReflection>(RK.Class);
 export const isInterface = createReflG<JO.DeclarationReflection>(RK.Interface);
 export const isEnum = createReflG<JO.DeclarationReflection>(RK.Enum);
 export const isNamespace = createReflG<JO.DeclarationReflection>(RK.Namespace);
+export const isProject = createReflG<JO.DeclarationReflection>(RK.Project);
 export const isParameter = createReflG<JO.DeclarationReflection>(RK.Parameter);
 export const isMethod = createReflG<JO.DeclarationReflection>(RK.Method);
 export const isFunction = createReflG<JO.DeclarationReflection>(RK.Function);
