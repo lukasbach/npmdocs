@@ -11,7 +11,7 @@ import { useConstructLookupMap } from "./use-construct-lookup-map";
 export const useConstructDocs = () => {
   const { packageName, encodedPackageName, version } = usePkgQuery();
   const hash = useHash();
-  const docs = usePackageDocs(packageName, version);
+  const docs = usePackageDocs(encodedPackageName, version);
   const lookupMap = useConstructLookupMap(docs.data);
 
   const additionals = useMemo(() => {
