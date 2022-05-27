@@ -86,9 +86,6 @@ const build = async (
   );
   const types = packageJson.types ?? packageJson.typings;
 
-  console.log(`Using types ${join(tmpPath, packageFolder, types)}`);
-  console.log(`Using tsconfig from ${tsconfigPath}`);
-
   if (!types) {
     // TODO find @types package if not found here.
     await writeJson(
@@ -100,6 +97,9 @@ const build = async (
     );
     return;
   }
+
+  console.log(`Using types ${join(tmpPath, packageFolder, types)}`);
+  console.log(`Using tsconfig from ${tsconfigPath}`);
 
   if (!existsSync(tsconfigPath)) {
     await writeJson(tsconfigPath, tsconfig);
