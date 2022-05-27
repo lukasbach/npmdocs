@@ -15,6 +15,12 @@ export const useConstructDocs = () => {
   const lookupMap = useConstructLookupMap(docs.data);
 
   const additionals = useMemo(() => {
+    if (isBuildError(docs?.data)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return {};
+    }
+
     const [routeString, jumpToHighlight] = hash?.includes(":")
       ? hash.split(":")
       : [hash];
@@ -51,6 +57,7 @@ export const useConstructDocs = () => {
 
   const docsItems = {
     ...additionals,
+    error: isBuildError(docs?.data) ? docs.data : undefined,
     lookupMap,
     packageName,
     encodedPackageName,
@@ -102,3 +109,11 @@ const traverseContainer = (
     targetDocs: currentContainer,
   };
 };
+
+const isBuildError = (
+  docs: any
+): docs is {
+  error: string;
+  errorCode: string;
+  details: string;
+} => docs?.error !== undefined;

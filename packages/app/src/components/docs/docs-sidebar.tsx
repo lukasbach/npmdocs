@@ -44,7 +44,12 @@ export const DocsSidebar: React.FC<{
     route,
     getRouteInNamespace,
     hash,
+    error,
   } = useDocs();
+
+  if (error) {
+    return null;
+  }
 
   return (
     <Sidebar>
