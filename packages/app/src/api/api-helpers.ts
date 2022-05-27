@@ -3,6 +3,7 @@ import { ITsDocBase, ITypescriptPluginData } from "@documentalist/client";
 import type { JSONOutput } from "typedoc";
 import { useMemo } from "react";
 import { SWRConfiguration } from "swr/dist/types";
+import { decompress } from "compress-json";
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -18,6 +19,15 @@ export const commonSwrConfig: SWRConfiguration = {
   revalidateOnFocus: false,
   revalidateOnReconnect: false,
 };
+
+const patchDecompression = <T extends ReturnType<typeof useSWR>>({
+  data,
+  ...rest
+}: T): T =>
+  ({
+    data: data ? decompress(data as any) : data,
+    ...rest,
+  } as T);
 
 export const usePackageVersions = (packageName: string) =>
   useSWR<Record<string, { time: string; built: boolean }>>(
@@ -44,17 +54,21 @@ export const usePackageJson = (packageName: string, version: string) =>
   );
 
 export const usePackageDocs = (packageName: string, version: string) =>
-  useSWR<JSONOutput.ProjectReflection>(
-    packageName && version && `/api/${packageName}/${version}/docs`,
-    fetcher,
-    commonSwrConfig
+  patchDecompression(
+    useSWR<JSONOutput.ProjectReflection>(
+      packageName && version && `/api/${packageName}/${version}/docs`,
+      fetcher,
+      commonSwrConfig
+    )
   );
 
 export const usePackageSource = (packageName: string, version: string) =>
-  useSWR<Record<string, true | object>>(
-    packageName && version && `/api/${packageName}/${version}/folder`,
-    fetcher,
-    commonSwrConfig
+  patchDecompression(
+    useSWR<Record<string, true | object>>(
+      packageName && version && `/api/${packageName}/${version}/folder`,
+      fetcher,
+      commonSwrConfig
+    )
   );
 
 export const useRecentBuilds = () =>
