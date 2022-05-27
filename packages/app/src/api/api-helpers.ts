@@ -20,14 +20,16 @@ export const commonSwrConfig: SWRConfiguration = {
   revalidateOnReconnect: false,
 };
 
-const patchDecompression = <T extends ReturnType<typeof useSWR>>({
-  data,
+const useDecompressed = <T extends ReturnType<typeof useSWR>>({
+  data: originalData,
   ...rest
-}: T): T =>
-  ({
-    data: data ? decompress(data as any) : data,
-    ...rest,
-  } as T);
+}: T): T => {
+  const data = useMemo(
+    () => (originalData ? decompress(originalData as any) : null),
+    [originalData]
+  );
+  return { data, ...rest } as T;
+};
 
 export const usePackageVersions = (packageName: string) =>
   useSWR<Record<string, { time: string; built: boolean }>>(
@@ -54,7 +56,7 @@ export const usePackageJson = (packageName: string, version: string) =>
   );
 
 export const usePackageDocs = (packageName: string, version: string) =>
-  patchDecompression(
+  useDecompressed(
     useSWR<JSONOutput.ProjectReflection>(
       packageName && version && `/api/${packageName}/${version}/docs`,
       fetcher,
@@ -63,7 +65,7 @@ export const usePackageDocs = (packageName: string, version: string) =>
   );
 
 export const usePackageSource = (packageName: string, version: string) =>
-  patchDecompression(
+  useDecompressed(
     useSWR<Record<string, true | object>>(
       packageName && version && `/api/${packageName}/${version}/folder`,
       fetcher,

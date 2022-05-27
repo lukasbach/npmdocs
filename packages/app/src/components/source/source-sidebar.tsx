@@ -10,6 +10,7 @@ import {
 } from "react-icons/io5";
 import { SidebarHeader } from "../common/sidebar/sidebar-header";
 import { SidebarItem } from "../common/sidebar/sidebar-item";
+import { useHash } from "../../common/use-hash";
 
 const Item: FC<{
   items: Record<string, boolean | any>;
@@ -19,12 +20,15 @@ const Item: FC<{
   content: true | any;
 }> = ({ fileName, content, items, parentPath, depth }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const hash = useHash();
+  const target = `#${parentPath}/${fileName}`;
   return (
     <>
       <SidebarItem
-        href={content === true ? `#${parentPath}/${fileName}` : null}
+        href={content === true ? target : null}
         onClick={() => setIsExpanded(!isExpanded)}
         indent={depth}
+        selected={target === `#${hash}`}
       >
         {content === true ? (
           <IoReaderOutline />
@@ -86,7 +90,11 @@ export const SourceSidebar: FC<{}> = () => {
     <Sidebar>
       <PackageSidebarItems currentKey="source" />
       <SidebarHeader as="h2">Package Source</SidebarHeader>
-      <Folder items={source.package as any} depth={0} parentPath={""} />
+      <Folder
+        items={source[Object.keys(source)[0]] as any}
+        depth={0}
+        parentPath={""}
+      />
     </Sidebar>
   );
 };
