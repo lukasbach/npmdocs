@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import type { JSONOutput } from "typedoc";
 
 import {
@@ -20,23 +20,45 @@ import {
   isReflection,
 } from "../../../common/guards";
 import { SymbolItemPiece } from "./symbol-item-piece";
+import { FlagList } from "./flag-list";
+import { useSettings } from "../../settings/use-settings";
+import { useLookedUpItem } from "../../../common/use-looked-up-item";
+import { useDocs } from "../provider/use-docs";
 
 import style from "./item.module.css";
-import { FlagList } from "./flag-list";
 
 interface Props {
   item: JSONOutput.DeclarationReflection;
 }
 
 export const SymbolItem = memo(function SymbolItem({ item }: Props) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { targetUrl } = useLookedUpItem(item.id);
+  const { hash } = useDocs();
+  const isHighlighted = hash === targetUrl;
+  const { hideFlagsInLists, defaultExpandAccordions } = useSettings();
+  const [isExpanded, setIsExpanded] = useState(
+    defaultExpandAccordions || isHighlighted
+  );
   const [selectedSignature, setSelectedSignature] = useState(0);
   const selectedType = hasSignatures(item)
     ? item.signatures[selectedSignature]
     : item;
 
+  useEffect(() => {
+    if (isHighlighted) {
+      containerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [isHighlighted]);
+
   return (
-    <div className={style.item}>
+    <div
+      className={[style.item, isHighlighted && style.highlighted].join(" ")}
+      ref={containerRef}
+    >
       <div className={style.head} onClick={() => setIsExpanded(!isExpanded)}>
         <div className={style.chevron}>
           {isExpanded ? (
@@ -47,7 +69,11 @@ export const SymbolItem = memo(function SymbolItem({ item }: Props) {
         </div>
         <div className={style.name}>{item.name}:</div>
         <div className={style.flags}>
-          <FlagList flags={isReflection(selectedType) && selectedType.flags} />
+          {!hideFlagsInLists && (
+            <FlagList
+              flags={isReflection(selectedType) && selectedType.flags}
+            />
+          )}
         </div>
         <div className={style.inlineSignature}>
           <Signature type={item} />

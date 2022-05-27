@@ -74,6 +74,7 @@ input::placeholder {
   --signature-block-bg-hover: var(--light-gray4);
   --signature-block-bg-selected: var(--light-gray3);
   --docs-item-detail-line-text: var(--gray3);
+  --symbol-highlight: yellow;
 
   --search-item-bg: var(--bg);
   --search-item-bg-hover: var(--light-gray1);
@@ -111,6 +112,7 @@ input::placeholder {
   --signature-block-bg-hover: var(--gray2);
   --signature-block-bg-selected: var(--gray1);
   --docs-item-detail-line-text: var(--gray3);
+  --symbol-highlight: #685921;
 
   --search-item-bg: var(--bg);
   --search-item-bg-hover: var(--dark-gray1);

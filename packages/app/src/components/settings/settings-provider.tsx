@@ -12,7 +12,7 @@ const defaultSettings: Settings = {
   searchOmitChildren: false,
   searchCheckCase: false,
   searchCheckFullPath: false,
-  searchListCount: 50,
+  searchListCount: 20,
 };
 
 export const SettingsContext = createContext<

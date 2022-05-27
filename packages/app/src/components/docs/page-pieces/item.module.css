@@ -55,3 +55,13 @@
   margin: 0;
   font-size: .8rem;
 }
+
+.highlighted {
+  animation-name: highlight-fade;
+  animation-duration: 3s;
+}
+@keyframes highlight-fade {
+  0% {background-color: var(--symbol-highlight);}
+  40% {background-color: var(--symbol-highlight);}
+  100% {background-color: transparent;}
+}
