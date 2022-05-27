@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import React from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
+import { SettingsProvider } from "../src/components/settings/settings-provider";
 
 import "nprogress/nprogress.css";
 
@@ -16,7 +17,11 @@ function MyApp({ Component, pageProps }) {
     const mode = localStorage.getItem("mode") ?? "light";
     document.body.classList.add(mode);
   }, []);
-  return <Component {...pageProps} />;
+  return (
+    <SettingsProvider>
+      <Component {...pageProps} />
+    </SettingsProvider>
+  );
 }
 
 export default MyApp;

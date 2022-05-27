@@ -1,0 +1,37 @@
+.container {
+  margin: 4px;
+  border: 1px solid var(--header);
+  background-color: var(--bg);
+  min-width: 400px;
+  max-width: 800px;
+}
+
+.title {
+  padding: 8px 16px;
+  background-color: var(--header);
+  color: var(--text-on-header)
+}
+
+.content {
+  padding: 16px;
+}
+
+.container [data-reach-tabs] {
+
+}
+
+.field {
+  display: flex;
+}
+.fieldLabel {
+  flex-grow: 1;
+}
+
+.hotkey {
+  background-color: var(--flag-bg);
+  color: var(--flag-text);
+  border-radius: 999px;
+  padding: 0 8px;
+}
+.hotkeySeparator {
+}

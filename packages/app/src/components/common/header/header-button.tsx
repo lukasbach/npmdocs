@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect } from "react";
+import React, { useState, FC, useEffect, HTMLProps } from "react";
 import { usePopper } from "react-popper";
 import { IoChevronDownSharp } from "react-icons/io5";
 import Link from "next/link";
@@ -10,6 +10,7 @@ export const HeaderButton: FC<{
   text: string | React.ReactNode;
   onClick?: () => void;
   href?: string;
+  buttonProps?: HTMLProps<HTMLElement>;
 }> = props => {
   const hasPopover = !!props.children;
   const Component = props.href ? "a" : "button";
@@ -45,6 +46,7 @@ export const HeaderButton: FC<{
         props.onClick?.();
       }}
       className={style.headerBtn}
+      {...(props.buttonProps as any)}
     >
       {props.text}
       {hasPopover && <IoChevronDownSharp />}
