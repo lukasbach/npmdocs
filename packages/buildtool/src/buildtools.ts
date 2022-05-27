@@ -13,6 +13,8 @@ import {
 import { join } from "path";
 import { program } from "commander";
 import { compress } from "compress-json";
+import { exec } from "child_process";
+import { promisify } from "util";
 import download from "download-tarball";
 
 const tsconfig: any = {
@@ -97,6 +99,12 @@ const build = async (
     );
     return;
   }
+
+  console.log("Installing dependencies...");
+  const installProcess = await promisify(exec)("npm install --only=prod", {
+    cwd: join(tmpPath, packageFolder),
+  });
+  console.log(installProcess.stdout);
 
   console.log(`Using types ${join(tmpPath, packageFolder, types)}`);
   console.log(`Using tsconfig from ${tsconfigPath}`);
