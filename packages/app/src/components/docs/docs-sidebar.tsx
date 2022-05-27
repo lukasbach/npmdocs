@@ -74,15 +74,18 @@ export const DocsSidebar: React.FC<{
         .map(({ title, resolvedChildren }) => (
           <React.Fragment key={title}>
             <SidebarHeader as="h2">{title}</SidebarHeader>
-            {resolvedChildren.map(({ name }) => (
-              <SidebarItem
-                href={getRouteInNamespace(name)}
-                key={name}
-                selected={hash.endsWith(name)}
-              >
-                {name}
-              </SidebarItem>
-            ))}
+            {resolvedChildren.map(({ name }) => {
+              const target = getRouteInNamespace(name);
+              return (
+                <SidebarItem
+                  href={target}
+                  key={name}
+                  selected={"#" + hash.split(":")[0] === target}
+                >
+                  {name}
+                </SidebarItem>
+              );
+            })}
           </React.Fragment>
         ))}
     </Sidebar>

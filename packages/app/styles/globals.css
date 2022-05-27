@@ -213,3 +213,24 @@ input::placeholder {
 #nprogress .bar {
   background-color: white !important;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-on-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-on-bg);
+}
+::-moz-selection {
+  color: var(--bg);
+  background: var(--text-on-bg);
+}
+::selection {
+  color: var(--bg);
+  background: var(--text-on-bg);
+}
