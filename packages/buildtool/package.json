@@ -1,6 +1,6 @@
 {
   "name": "@lukasbach/npmdocs-buildtool",
-  "version": "0.1.1-alpha.1",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:lukasbach/npmdocs.git",
