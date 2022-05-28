@@ -13,7 +13,10 @@ const Page: FC = () => {
   const { packageName, version } = usePkgQuery();
   return (
     <DocsProvider>
-      <LayoutContainer header={<DocsHeader />} sidebar={<DocsSidebar />}>
+      <LayoutContainer
+        header={<DocsHeader />}
+        sidebar={<DocsSidebar currentKey="docs" />}
+      >
         <Head>
           <title>{`${packageName}@${version}`} docs</title>
         </Head>

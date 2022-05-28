@@ -13,12 +13,10 @@ import { HeaderExpander } from "../common/header/header-expander";
 import { usePkgQuery } from "../../common/use-pkg-query";
 import { HeaderRight } from "../shared/header/header-right";
 import { HeaderLeft } from "../shared/header/header-left";
-import { useDocs } from "./provider/use-docs";
 
 export const DocsHeader: React.FC<{}> = props => {
-  const { docsBaseUrl } = useDocs();
   const { version, encodedPackageName, packageName } = usePkgQuery();
-  const { data: versions, error } = usePackageVersions(encodedPackageName);
+  const { data: versions } = usePackageVersions(encodedPackageName);
   const { data: about } = useAboutPackage(encodedPackageName);
 
   return (
@@ -30,7 +28,6 @@ export const DocsHeader: React.FC<{}> = props => {
             <IoCubeOutline /> {packageName}
           </>
         }
-        href={docsBaseUrl}
       />
       {versions && (
         <HeaderButton text={version ? `@${version}` : "Choose a version"}>

@@ -30,3 +30,23 @@
   background-color: var(--text-on-bg);
   color: var(--bg);
 }
+
+.detailsList {
+  display: flex;
+  margin: 20px 0;
+}
+.detailsItem {
+  flex: 1;
+  text-align: center;
+  background-color: var(--text-on-bg);
+  color: var(--bg);
+  margin: 0 20px;
+  padding: 8px;
+  outline: 1px solid var(--text-on-bg);
+  outline-offset: 2px;
+}
+.detailsValue {
+  font-size: 1.4rem;
+}
+.detailsLabel {
+  font-size: .8rem;}

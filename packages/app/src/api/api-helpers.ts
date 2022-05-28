@@ -41,6 +41,15 @@ export const usePackageVersions = (packageName: string) =>
 export const useAboutPackage = (packageName: string) =>
   useSWR<any>(`/api/${packageName}/about`, fetcher, commonSwrConfig);
 
+export const useAboutPackageVersion = (packageName: string, version: string) =>
+  useSWR<{
+    gzip: number;
+    size: number;
+    hasSideEffects: boolean;
+    isModuleType: boolean;
+    hasBundlephobiaLoaded: boolean;
+  }>(`/api/${packageName}/${version}/about`, fetcher, commonSwrConfig);
+
 export const useReadme = (packageName: string, version: string) =>
   useSWR<any>(
     packageName && version && `/api/${packageName}/${version}/readme`,

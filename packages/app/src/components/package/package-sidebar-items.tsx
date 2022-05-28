@@ -10,10 +10,11 @@ const Item: FC<{
   packageName: string;
   version: string;
   currentKey: string;
-}> = ({ packageName, version, itemKey, children, currentKey }) => (
+  selected?: boolean;
+}> = ({ packageName, version, itemKey, children, currentKey, selected }) => (
   <SidebarItem
     href={`/${packageName}/${version}/${itemKey}`}
-    selected={itemKey === currentKey}
+    selected={itemKey === currentKey || selected}
   >
     {children}
   </SidebarItem>
@@ -28,8 +29,8 @@ export const PackageSidebarItems: FC<{
   return (
     <>
       <SidebarHeader as="h1">{packageName}</SidebarHeader>
-      <Item {...common} itemKey="">
-        About
+      <Item {...common} itemKey="" selected={currentKey === "docs"}>
+        Documentation
       </Item>
       <Item {...common} itemKey="readme">
         Readme

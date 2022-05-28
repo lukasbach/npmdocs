@@ -1,16 +1,18 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import { useDocs } from "../provider/use-docs";
+import { Comment } from "../page-pieces/comment";
+import { isContainerReflection, isProject } from "../../../common/guards";
+import { OverviewGroup } from "./overview-group";
+import { ProjectHeader } from "./project-header";
 
 import style from "./styles.module.css";
-import { Comment } from "../page-pieces/comment";
-import { isContainerReflection } from "../../../common/guards";
-import { SymbolGroup } from "../page-pieces/symbol-group";
-import { OverviewGroup } from "./overview-group";
 
 export const Overview: FC = () => {
   const { symbolDocs } = useDocs();
   return (
     <div>
+      {isProject(symbolDocs) && <ProjectHeader />}
+
       <Comment comment={symbolDocs.comment} />
 
       {isContainerReflection(symbolDocs) &&
