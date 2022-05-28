@@ -103,12 +103,9 @@ const build = async (
 
   console.log("Installing dependencies...");
   const installProcess = await promisify(exec)(
-    "npm install --ignore-scripts --no-package-lock",
+    "npm install --ignore-scripts --no-package-lock --production --omit=dev",
     {
       cwd: join(tmpPath, packageFolder),
-      env: {
-        NODE_ENV: "production",
-      },
     }
   );
   console.log(installProcess.stdout);
