@@ -9,7 +9,9 @@ export const getVersions = async (packageName: string) => {
     allVersionsPromise,
     generatedVersionsPromise,
   ]);
-  const versions = Object.keys(allVersions.versions);
+  const versions = Object.keys(allVersions.versions).filter(
+    version => !version.includes("-")
+  );
   return versions.reverse().reduce(
     (acc, version) => ({
       ...acc,
