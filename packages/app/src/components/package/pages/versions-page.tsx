@@ -1,6 +1,4 @@
-import React, { FC, ReactNode } from "react";
-
-import style from "./styles.module.css";
+import React, { FC } from "react";
 import { useDocs } from "../../docs/provider/use-docs";
 import { ListContainer } from "../../common/list/list-container";
 import { usePackageVersions } from "../../../api/api-helpers";
@@ -8,7 +6,7 @@ import { ListItem } from "../../common/list/list-item";
 
 export const VersionsPage: FC<{}> = () => {
   const { packageName, encodedPackageName } = useDocs();
-  const { data } = usePackageVersions(packageName);
+  const { data } = usePackageVersions(encodedPackageName);
   return (
     <div>
       <h1>{packageName} Versions</h1>

@@ -2,21 +2,21 @@ import * as React from "react";
 import { Header } from "../common/header/header";
 import { HeaderButton } from "../common/header/header-button";
 import { HeaderListButton } from "../common/header/header-list-button";
-import { ColormodeButton } from "../common/header/colormode-button";
 import { useAboutPackage, usePackageVersions } from "../../api/api-helpers";
 import {
   IoPricetagOutline,
   IoPricetagSharp,
   IoCubeOutline,
-  IoLibrarySharp,
+  IoCheckmark,
 } from "react-icons/io5";
 import { HeaderExpander } from "../common/header/header-expander";
-import { PackageSearchInput } from "./package-search-input";
 import { usePkgQuery } from "../../common/use-pkg-query";
 import { HeaderRight } from "../shared/header/header-right";
 import { HeaderLeft } from "../shared/header/header-left";
+import { useDocs } from "./provider/use-docs";
 
 export const DocsHeader: React.FC<{}> = props => {
+  const { docsBaseUrl } = useDocs();
   const { version, encodedPackageName, packageName } = usePkgQuery();
   const { data: versions, error } = usePackageVersions(encodedPackageName);
   const { data: about } = useAboutPackage(encodedPackageName);
@@ -30,20 +30,20 @@ export const DocsHeader: React.FC<{}> = props => {
             <IoCubeOutline /> {packageName}
           </>
         }
+        href={docsBaseUrl}
       />
       {versions && (
         <HeaderButton text={version ? `@${version}` : "Choose a version"}>
-          {Object.entries(versions).map(([version, { time, built }]) => (
-            <HeaderListButton
-              key={version}
-              href={`/${encodedPackageName}/${version}`}
-            >
-              {built ? (
-                <IoPricetagSharp title="Documentation is built for this version" />
-              ) : (
-                <IoPricetagOutline title="Version has not been built yet" />
+          {Object.entries(versions).map(([v, { time, built }]) => (
+            <HeaderListButton key={v} href={`/${encodedPackageName}/${v}`}>
+              {v === version ? <IoPricetagSharp /> : <IoPricetagOutline />}
+              {v}
+              {built && (
+                <>
+                  {" "}
+                  <IoCheckmark title="Documentation is built for this version" />
+                </>
               )}
-              {version}
             </HeaderListButton>
           ))}
         </HeaderButton>

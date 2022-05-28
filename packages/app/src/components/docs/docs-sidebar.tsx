@@ -78,7 +78,7 @@ export const DocsSidebar: React.FC<{
               const target = getRouteInNamespace(name);
               return (
                 <SidebarItem
-                  href={target}
+                  href={`/${docsBaseUrl}${target}`}
                   key={name}
                   selected={"#" + hash.split(":")[0] === target}
                 >
