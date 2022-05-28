@@ -142,7 +142,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
       );
     case "reference": {
       if (type.id) {
-        console.log("!!", type, typeAttachedReference);
+        // TODO
         return typeAttachedReference?.reflection ? (
           <Signature type={typeAttachedReference.reflection} reference={type} />
         ) : (

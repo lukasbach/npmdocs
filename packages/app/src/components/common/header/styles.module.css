@@ -66,3 +66,19 @@
 .expander {
   flex-grow: 1;
 }
+
+
+.header ::-webkit-scrollbar-thumb {
+  background: var(--text-on-header);
+}
+.header ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-on-header);
+}
+.header ::-moz-selection {
+  color: var(--header);
+  background: var(--text-on-header);
+}
+.header ::selection {
+  color: var(--header);
+  background: var(--text-on-header);
+}
