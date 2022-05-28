@@ -44,6 +44,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: 20%;
+  font-family: var(--font-mono);
 }
 
 .details {

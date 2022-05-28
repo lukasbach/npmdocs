@@ -1,5 +1,4 @@
 .container {
-  max-width: 900px;
 }
 
 .container h1 {
@@ -15,11 +14,6 @@
 
 .flag {
 
-}
-
-.titleHeavy {
-  font-weight: bold;
-  margin: 0 10px 0 16px;
 }
 
 .description {

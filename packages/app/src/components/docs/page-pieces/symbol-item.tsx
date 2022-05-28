@@ -26,6 +26,7 @@ import { useLookedUpItem } from "../../../common/use-looked-up-item";
 import { useDocs } from "../provider/use-docs";
 
 import style from "./item.module.css";
+import { useEventBus } from "../../../common/use-event-bus";
 
 interface Props {
   item: JSONOutput.DeclarationReflection;
@@ -44,6 +45,10 @@ export const SymbolItem = memo(function SymbolItem({ item }: Props) {
   const selectedType = hasSignatures(item)
     ? item.signatures[selectedSignature]
     : item;
+
+  useEventBus<boolean>("toggle-expanded-items", isExpanded => {
+    setIsExpanded(isExpanded);
+  });
 
   useEffect(() => {
     if (isHighlighted) {

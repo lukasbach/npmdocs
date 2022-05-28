@@ -1,0 +1,44 @@
+.title {
+  margin: 20px 0 8px 0;
+  font-size: 1.8rem;
+}
+
+.titleHeavy {
+  font-weight: bold;
+  margin: 0 10px 0 16px;
+}
+
+.tabs {
+  background-color: transparent;
+  border-bottom: 4px solid var(--text-on-bg);
+  margin-top: 16px;
+  display: flex;
+}
+.tabs [data-reach-tab] {
+  border: none;
+}
+.tabs [data-reach-tab][data-selected] {
+  background-color: var(--text-on-bg);
+  color: var(--bg);
+}
+.tabsStretcher {
+  flex-grow: 1;
+}
+.tabsButton {
+  background-color: transparent;
+  color: var(--text-on-bg);
+  border: none;
+  cursor: pointer;
+}
+.tabsButton:active {
+  background-color: var(--text-on-bg);
+  color: var(--bg);
+}
+
+.typeList {
+  margin: 4px 0 0 32px;
+  font-family: var(--font-mono);
+}
+.typeListTitle {
+
+}

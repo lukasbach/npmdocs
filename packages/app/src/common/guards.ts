@@ -44,3 +44,8 @@ export const isReflection = (
   reflection: any | undefined
 ): reflection is JSONOutput.Reflection =>
   (reflection as JSONOutput.Reflection)?.kind !== undefined;
+
+export const isDeclarationReflection = (
+  reflection: any | undefined
+): reflection is JSONOutput.DeclarationReflection =>
+  (reflection as JSONOutput.DeclarationReflection)?.kind !== undefined; // TODO ?

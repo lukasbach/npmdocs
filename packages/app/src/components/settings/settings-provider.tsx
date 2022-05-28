@@ -4,7 +4,7 @@ import { Settings } from "./types";
 
 const defaultSettings: Settings = {
   darkMode: false,
-  containerWidth: 600,
+  containerWidth: 1000,
   sortEnumsByValue: false,
   hideInheritedMembers: false,
   defaultExpandAccordions: false,

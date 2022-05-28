@@ -1,6 +1,5 @@
 import * as React from "react";
 import { DocsContainer } from "./page-pieces/docs-container";
-import { SymbolTitle } from "./page-pieces/symbol-title";
 import { useDocs } from "./provider/use-docs";
 import { SymbolGroup } from "./page-pieces/symbol-group";
 import {
@@ -11,8 +10,8 @@ import {
 import { Comment } from "./page-pieces/comment";
 import { SymbolItem } from "./page-pieces/symbol-item";
 import { SignatureBlock } from "./page-pieces/signature-block";
-import { Search } from "../search/search";
-import { Loader } from "../loader/loader";
+import { SymbolHeader } from "./page-pieces/symbol-header/symbol-header";
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs, error, packageName, version } = useDocs();
@@ -35,18 +34,29 @@ export const DocsPage: React.FC = props => {
 
   return (
     <DocsContainer>
-      <SymbolTitle />
-      <Comment comment={symbolDocs.comment} />
+      <Tabs>
+        <SymbolHeader />
 
-      {isContainerReflection(symbolDocs) &&
-        symbolDocs.groups.map(group => (
-          <SymbolGroup group={group} key={group.title} />
-        ))}
+        <TabPanels>
+          <TabPanel>
+            <Comment comment={symbolDocs.comment} />
 
-      {isFunction(symbolDocs) && <SymbolItem item={symbolDocs} />}
-      {isTypeAlias(symbolDocs) && <SignatureBlock item={symbolDocs.type} />}
+            {isContainerReflection(symbolDocs) &&
+              symbolDocs.groups.map(group => (
+                <SymbolGroup group={group} key={group.title} />
+              ))}
 
-      {/*<pre>{JSON.stringify(symbolDocs, null, 2)}</pre>*/}
+            {isFunction(symbolDocs) && <SymbolItem item={symbolDocs} />}
+            {isTypeAlias(symbolDocs) && (
+              <SignatureBlock item={symbolDocs.type} />
+            )}
+          </TabPanel>
+
+          <TabPanel>
+            <pre>{JSON.stringify(symbolDocs, null, 2)}</pre>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </DocsContainer>
   );
 };
