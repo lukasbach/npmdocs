@@ -1,0 +1,32 @@
+.title {
+  margin: 32px 0 8px 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  column-count: 3;
+  column-gap: 4px;
+}
+
+.item {
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  font-family: var(--font-mono);
+}
+
+.link {
+  display: block;
+  border: 1px solid var(--text-on-bg);
+  padding: 8px 16px;
+  margin: 0 0 4px 0;
+}
+.link:hover {
+  background-color: var(--subtle);
+}
+.link:active {
+  background-color: var(--text-on-bg);
+  color: var(--bg);
+}

@@ -46,6 +46,7 @@ input::placeholder {
 .light {
   --primary: var(--indigo1); /*d49100*/
   --bg: var(--white);
+  --subtle: var(--light-gray4);
   --header: var(--dark-gray1);
   --sidebar: var(--light-gray4);
   --sidebar-item-hover: var(--light-gray5);
@@ -84,6 +85,7 @@ input::placeholder {
 .dark {
   --primary: var(--indigo1);
   --bg: var(--dark-gray2);
+  --subtle: var(--dark-gray3);
   --header: var(--dark-gray1);
   --sidebar: var(--dark-gray3);
   --sidebar-item-hover: var(--dark-gray4);

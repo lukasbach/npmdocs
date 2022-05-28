@@ -5,6 +5,8 @@ import { SymbolGroup } from "./page-pieces/symbol-group";
 import {
   isContainerReflection,
   isFunction,
+  isNamespace,
+  isProject,
   isTypeAlias,
 } from "../../common/guards";
 import { Comment } from "./page-pieces/comment";
@@ -13,6 +15,7 @@ import { SignatureBlock } from "./page-pieces/signature-block";
 import { SymbolHeader } from "./page-pieces/symbol-header/symbol-header";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 import { SymbolSource } from "./symbol-source/symbol-source";
+import { Overview } from "./overview/overview";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs, error, packageName, version } = useDocs();
@@ -33,6 +36,8 @@ export const DocsPage: React.FC = props => {
     );
   }
 
+  const showOverview = isNamespace(symbolDocs) || isProject(symbolDocs);
+
   return (
     <DocsContainer>
       <Tabs>
@@ -40,16 +45,22 @@ export const DocsPage: React.FC = props => {
 
         <TabPanels>
           <TabPanel>
-            <Comment comment={symbolDocs.comment} />
+            {showOverview ? (
+              <Overview />
+            ) : (
+              <>
+                <Comment comment={symbolDocs.comment} />
 
-            {isContainerReflection(symbolDocs) &&
-              symbolDocs.groups.map(group => (
-                <SymbolGroup group={group} key={group.title} />
-              ))}
+                {isContainerReflection(symbolDocs) &&
+                  symbolDocs.groups.map(group => (
+                    <SymbolGroup group={group} key={group.title} />
+                  ))}
 
-            {isFunction(symbolDocs) && <SymbolItem item={symbolDocs} />}
-            {isTypeAlias(symbolDocs) && (
-              <SignatureBlock item={symbolDocs.type} />
+                {isFunction(symbolDocs) && <SymbolItem item={symbolDocs} />}
+                {isTypeAlias(symbolDocs) && (
+                  <SignatureBlock item={symbolDocs.type} />
+                )}
+              </>
             )}
           </TabPanel>
 
