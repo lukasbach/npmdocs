@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { JSONOutput } from "typedoc";
 
 import {
@@ -59,12 +59,22 @@ export const SymbolItem = memo(function SymbolItem({ item }: Props) {
     }
   }, [isHighlighted]);
 
+  const onClick = useCallback(() => {
+    setIsExpanded(prev => {
+      if (!prev) {
+        window.history.replaceState(null, "", `#${targetUrl}`);
+      }
+
+      return !prev;
+    });
+  }, []);
+
   return (
     <div
       className={[style.item, isHighlighted && style.highlighted].join(" ")}
       ref={containerRef}
     >
-      <div className={style.head} onClick={() => setIsExpanded(!isExpanded)}>
+      <div className={style.head} onClick={onClick}>
         <div className={style.chevron}>
           {isExpanded ? (
             <IoChevronDownCircleSharp />
