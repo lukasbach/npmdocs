@@ -82,10 +82,8 @@ const build = async (
   await writeJson(join(target, "folder.json"), folderStructureCompressed);
 
   const packageFolder = (await readdir(tmpPath))[0];
-
-  const packageJson = await readJSON(
-    join(tmpPath, packageFolder, "package.json")
-  );
+  const packageJsonPath = join(tmpPath, packageFolder, "package.json");
+  const packageJson = await readJSON(packageJsonPath);
   const types = packageJson.types ?? packageJson.typings;
 
   if (!types) {
@@ -100,10 +98,19 @@ const build = async (
     return;
   }
 
+  console.log("Patching package.json...");
+  await writeJson(packageJsonPath, { ...packageJson, devDependencies: {} });
+
   console.log("Installing dependencies...");
-  const installProcess = await promisify(exec)("npm install --only=prod", {
-    cwd: join(tmpPath, packageFolder),
-  });
+  const installProcess = await promisify(exec)(
+    "npm install --ignore-scripts --no-package-lock",
+    {
+      cwd: join(tmpPath, packageFolder),
+      env: {
+        NODE_ENV: "production",
+      },
+    }
+  );
   console.log(installProcess.stdout);
 
   console.log(`Using types ${join(tmpPath, packageFolder, types)}`);
