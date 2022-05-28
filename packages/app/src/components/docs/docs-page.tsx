@@ -14,8 +14,10 @@ import { SymbolItem } from "./page-pieces/symbol-item";
 import { SignatureBlock } from "./page-pieces/signature-block";
 import { SymbolHeader } from "./page-pieces/symbol-header/symbol-header";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
-import { SymbolSource } from "./symbol-source/symbol-source";
+import { SymbolSource } from "./source/symbol-source";
 import { Overview } from "./overview/overview";
+import { RawSource } from "./source/raw-source";
+import { PackagejsonSource } from "./source/packagejson-source";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs, error, packageName, version } = useDocs();
@@ -44,7 +46,7 @@ export const DocsPage: React.FC = props => {
         <SymbolHeader />
 
         <TabPanels>
-          <TabPanel>
+          <TabPanel key="docs">
             {showOverview ? (
               <Overview />
             ) : (
@@ -64,14 +66,18 @@ export const DocsPage: React.FC = props => {
             )}
           </TabPanel>
 
-          <TabPanel>TODO</TabPanel>
+          <TabPanel>Hierarchy is not yet implemented</TabPanel>
 
           <TabPanel>
-            <pre>{JSON.stringify(symbolDocs, null, 2)}</pre>
+            <RawSource tabIndex={2} />
           </TabPanel>
 
           <TabPanel>
             <SymbolSource tabIndex={3} />
+          </TabPanel>
+
+          <TabPanel key="overview">
+            <PackagejsonSource tabIndex={4} />
           </TabPanel>
         </TabPanels>
       </Tabs>

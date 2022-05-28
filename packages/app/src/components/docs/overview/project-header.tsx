@@ -24,7 +24,7 @@ export const ProjectHeader: FC = () => {
       </div>
       <div className={style.detailsItem}>
         <div className={style.detailsValue}>{prettyBytes(data.gzip)}</div>
-        <div className={style.detailsLabel}>Bundle Size</div>
+        <div className={style.detailsLabel}>GZipped Size</div>
       </div>
       <div className={style.detailsItem}>
         <div className={style.detailsValue}>

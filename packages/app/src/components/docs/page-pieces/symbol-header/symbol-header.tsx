@@ -4,10 +4,7 @@ import { FlagList } from "../flag-list";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 import style from "./styles.module.css";
-import {
-  isDeclarationReflection,
-  isReflection,
-} from "../../../../common/guards";
+import { isDeclarationReflection, isProject } from "../../../../common/guards";
 import { RelatedTypeList } from "./related-type-list.ts";
 import { Signature } from "../signature";
 import { TabButtons } from "./tab-buttons";
@@ -79,11 +76,15 @@ export const SymbolHeader: FC = () => {
         </div>
       )}
 
-      <TabList className={style.tabs}>
+      <TabList
+        className={style.tabs}
+        key={`docstabs-${isProject(symbolDocs) ? "project" : "symbol"}`} // re-render tabs when switching between project and symbol
+      >
         <Tab>Docs</Tab>
         <Tab>Hierarchy</Tab>
         <Tab>Raw</Tab>
         <Tab>Source</Tab>
+        {isProject(symbolDocs) ? <Tab>package.json</Tab> : null}
         <div className={style.tabsStretcher} />
         <TabButtons key={symbolDocs?.name} />
       </TabList>
