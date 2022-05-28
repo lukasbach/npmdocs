@@ -40,10 +40,6 @@ export const SymbolSource: FC<{ tabIndex: number }> = ({ tabIndex }) => {
       .slice(0, -1)
       .join("/");
 
-    if (!typesBasePath) {
-      return;
-    }
-
     fetch(
       `https://unpkg.com/${packageName}@${version}/${typesBasePath}/${sourceFile.fileName}`
     )
