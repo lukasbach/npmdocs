@@ -11,8 +11,7 @@ export const CodeView: FC = () => {
   const hash = useHash();
   const { packageName, version } = usePkgQuery();
   const [code, setCode] = useState("");
-  const [containerRef, { x, y, width, height, top, right, bottom, left }] =
-    useMeasure();
+  const [containerRef, { height }] = useMeasure();
 
   useEffect(() => {
     if (!packageName || !version || !hash) {

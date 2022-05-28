@@ -12,6 +12,7 @@ import { SymbolItem } from "./page-pieces/symbol-item";
 import { SignatureBlock } from "./page-pieces/signature-block";
 import { SymbolHeader } from "./page-pieces/symbol-header/symbol-header";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
+import { SymbolSource } from "./symbol-source/symbol-source";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs, error, packageName, version } = useDocs();
@@ -52,8 +53,14 @@ export const DocsPage: React.FC = props => {
             )}
           </TabPanel>
 
+          <TabPanel>TODO</TabPanel>
+
           <TabPanel>
             <pre>{JSON.stringify(symbolDocs, null, 2)}</pre>
+          </TabPanel>
+
+          <TabPanel>
+            <SymbolSource tabIndex={3} />
           </TabPanel>
         </TabPanels>
       </Tabs>

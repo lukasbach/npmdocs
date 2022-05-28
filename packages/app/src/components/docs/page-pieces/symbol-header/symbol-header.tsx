@@ -81,6 +81,7 @@ export const SymbolHeader: FC = () => {
 
       <TabList className={style.tabs}>
         <Tab>Docs</Tab>
+        <Tab>Hierarchy</Tab>
         <Tab>Raw</Tab>
         <Tab>Source</Tab>
         <div className={style.tabsStretcher} />
