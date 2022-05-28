@@ -1,6 +1,9 @@
 import { useDocs } from "../components/docs/provider/use-docs";
 import { useMemo } from "react";
-import { isContainerReflection, isProject } from "./guards";
+import {
+  isContainerReflection,
+  isProject,
+} from "@lukasbach/npmdocs-typedoc-utils";
 
 export const useLookedUpItem = (id?: number) => {
   const { lookupMap } = useDocs();

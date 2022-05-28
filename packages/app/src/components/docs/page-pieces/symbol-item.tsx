@@ -18,7 +18,7 @@ import {
   isFunction,
   isMethod,
   isReflection,
-} from "../../../common/guards";
+} from "@lukasbach/npmdocs-typedoc-utils";
 import { SymbolItemPiece } from "./symbol-item-piece";
 import { FlagList } from "./flag-list";
 import { useSettings } from "../../settings/use-settings";

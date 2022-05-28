@@ -3,7 +3,10 @@ import React, { FC, memo, ReactNode } from "react";
 import type { JSONOutput } from "typedoc";
 import { useDocs } from "../provider/use-docs";
 import { ReflectionKind } from "../../../common/reflection-kind";
-import { isContainerReflection, isTypeParameter } from "../../../common/guards";
+import {
+  isContainerReflection,
+  isTypeParameter,
+} from "@lukasbach/npmdocs-typedoc-utils";
 
 import style from "./signature.module.css";
 import { useLookedUpItem } from "../../../common/use-looked-up-item";

@@ -8,7 +8,7 @@ import {
   isNamespace,
   isProject,
   isTypeAlias,
-} from "../../common/guards";
+} from "@lukasbach/npmdocs-typedoc-utils";
 import { Comment } from "./page-pieces/comment";
 import { SymbolItem } from "./page-pieces/symbol-item";
 import { SignatureBlock } from "./page-pieces/signature-block";

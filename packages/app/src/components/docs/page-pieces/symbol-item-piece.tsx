@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from "react";
 import type { JSONOutput } from "typedoc";
 import { Signature } from "./signature";
 import { Comment } from "./comment";
-import { isParameter, isReflection } from "../../../common/guards";
+import { isParameter, isReflection } from "@lukasbach/npmdocs-typedoc-utils";
 
 import style from "./symbol-item-piece.module.css";
 import { FlagList } from "./flag-list";

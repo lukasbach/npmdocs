@@ -5,7 +5,7 @@ import { useHash } from "../../../common/use-hash";
 import { usePackageDocs } from "../../../api/api-helpers";
 import { ReflectionKind } from "../../../common/reflection-kind";
 import { getResolvedGroups } from "../../../common/get-resolved-groups";
-import { isContainerReflection } from "../../../common/guards";
+import { isContainerReflection } from "@lukasbach/npmdocs-typedoc-utils";
 import { useConstructLookupMap } from "./use-construct-lookup-map";
 
 export const useConstructDocs = () => {

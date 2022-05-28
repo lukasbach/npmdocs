@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { JSONOutput } from "typedoc";
-import { isContainerReflection } from "../../../common/guards";
+import { isContainerReflection } from "@lukasbach/npmdocs-typedoc-utils";
 import { useDocs } from "../provider/use-docs";
 import { OverviewItem } from "./overview-item";
 

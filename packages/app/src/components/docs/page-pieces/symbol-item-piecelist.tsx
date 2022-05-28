@@ -3,7 +3,7 @@ import type { JSONOutput } from "typedoc";
 import { SymbolItemPiece } from "./symbol-item-piece";
 
 import style from "./symbol-item-piece.module.css";
-import { isReflection } from "../../../common/guards";
+import { isReflection } from "@lukasbach/npmdocs-typedoc-utils";
 
 export const SymbolItemPiecelist: FC<{
   pieceReflections?: Array<JSONOutput.Reflection | JSONOutput.SomeType>;

@@ -1,7 +1,7 @@
 import { useDebounce } from "react-use";
 import { useState } from "react";
 import { useDocs } from "../docs/provider/use-docs";
-import { isProject } from "../../common/guards";
+import { isProject } from "@lukasbach/npmdocs-typedoc-utils";
 import { useSettings } from "../settings/use-settings";
 import { ReflectionKind } from "../../common/reflection-kind";
 

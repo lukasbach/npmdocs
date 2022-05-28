@@ -2,7 +2,7 @@ import React, { FC, useCallback, useMemo } from "react";
 import { useDocs } from "../provider/use-docs";
 import type { JSONOutput } from "typedoc";
 import { SymbolItem } from "./symbol-item";
-import { isContainerReflection } from "../../../common/guards";
+import { isContainerReflection } from "@lukasbach/npmdocs-typedoc-utils";
 import { useSettings } from "../../settings/use-settings";
 import { ReflectionKind } from "../../../common/reflection-kind";
 

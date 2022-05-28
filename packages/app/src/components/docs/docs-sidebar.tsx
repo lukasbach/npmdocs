@@ -8,7 +8,7 @@ import { PackageSidebarItems } from "../package/package-sidebar-items";
 import { useRouterQuery } from "../../common/use-router-query";
 import { useHash } from "../../common/use-hash";
 import { useDocs } from "./provider/use-docs";
-import { isNamespace } from "../../common/guards";
+import { isNamespace } from "@lukasbach/npmdocs-typedoc-utils";
 
 const SidebarSection: React.FC<{
   docs: ITypescriptPluginData | undefined;

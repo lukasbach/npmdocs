@@ -9,7 +9,7 @@ import React, {
 import { useTabsContext } from "@reach/tabs";
 import { useDocs } from "../provider/use-docs";
 import NProgress from "nprogress";
-import { isDeclarationReflection } from "../../../common/guards";
+import { isDeclarationReflection } from "@lukasbach/npmdocs-typedoc-utils";
 import { usePackageJson } from "../../../api/api-helpers";
 import { DocsEditor } from "./docs-editor";
 

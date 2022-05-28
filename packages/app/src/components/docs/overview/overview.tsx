@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import { useDocs } from "../provider/use-docs";
 import { Comment } from "../page-pieces/comment";
-import { isContainerReflection, isProject } from "../../../common/guards";
+import {
+  isContainerReflection,
+  isProject,
+} from "@lukasbach/npmdocs-typedoc-utils";
 import { OverviewGroup } from "./overview-group";
 import { ProjectHeader } from "./project-header";
 

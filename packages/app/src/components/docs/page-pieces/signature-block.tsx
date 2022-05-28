@@ -3,7 +3,7 @@ import type { JSONOutput } from "typedoc";
 import { Signature } from "./signature";
 
 import style from "./signature.module.css";
-import { hasSignatures, isReflection } from "../../../common/guards";
+import { hasSignatures, isReflection } from "@lukasbach/npmdocs-typedoc-utils";
 
 export const SignatureBlock: FC<{
   item:

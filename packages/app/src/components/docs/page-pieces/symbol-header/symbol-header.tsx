@@ -4,7 +4,10 @@ import { FlagList } from "../flag-list";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
 
 import style from "./styles.module.css";
-import { isDeclarationReflection, isProject } from "../../../../common/guards";
+import {
+  isDeclarationReflection,
+  isProject,
+} from "@lukasbach/npmdocs-typedoc-utils";
 import { RelatedTypeList } from "./related-type-list.ts";
 import { Signature } from "../signature";
 import { TabButtons } from "./tab-buttons";
