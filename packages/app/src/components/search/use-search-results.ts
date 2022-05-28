@@ -23,7 +23,7 @@ const childrenKinds = [
 ];
 
 export const useSearchResults = (search: string) => {
-  const { lookupMap } = useDocs();
+  const { lookupMap, error } = useDocs();
   const [results, setResults] = useState<number[]>([]);
   const { searchCheckCase, searchOmitChildren, searchListCount } =
     useSettings();
@@ -33,6 +33,10 @@ export const useSearchResults = (search: string) => {
       //   setResults([]);
       //   return;
       // }
+
+      if (error) {
+        return;
+      }
 
       const items: number[] = [];
 
