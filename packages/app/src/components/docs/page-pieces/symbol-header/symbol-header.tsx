@@ -14,16 +14,37 @@ import { TabButtons } from "./tab-buttons";
 
 export const SymbolHeader: FC = () => {
   const { symbolDocs } = useDocs();
+  const typeParameters = isDeclarationReflection(symbolDocs) &&
+    symbolDocs.typeParameter && (
+      <span className={style.titleThin}>
+        {"<"}
+        {symbolDocs.typeParameter.map((t, i, arr) => (
+          <React.Fragment key={i}>
+            <Signature type={t} />
+            {i < arr.length - 1 && ", "}
+          </React.Fragment>
+        ))}
+        {">"}
+      </span>
+    );
+
   return (
     <div>
       <h1 className={style.title}>
         {symbolDocs?.kindString}{" "}
         <span className={style.titleHeavy}>{symbolDocs?.name}</span>
+        {typeParameters}
         <FlagList flags={symbolDocs.flags} />
       </h1>
 
       {isDeclarationReflection(symbolDocs) && (
         <>
+          {typeParameters && (
+            <div className={style.typeList}>
+              <span className={style.typeListTitle}>typed with</span>{" "}
+              {typeParameters}
+            </div>
+          )}
           <RelatedTypeList types={symbolDocs.extendedTypes}>
             extends
           </RelatedTypeList>

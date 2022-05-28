@@ -1,17 +1,6 @@
 .container {
 }
 
-.container h1 {
-  font-weight: normal;
-  font-family: var(--font-mono);
-  display: flex;
-  align-items: center;
-}
-
-.container h2 {
-
-}
-
 .flag {
 
 }

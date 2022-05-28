@@ -28,6 +28,9 @@ export const isConstructorSignature = createReflG<JO.DeclarationReflection>(
 export const isCallSignature = createReflG<JO.DeclarationReflection>(
   RK.CallSignature
 );
+export const isTypeParameter = createReflG<JO.TypeParameterReflection>(
+  RK.TypeParameter
+);
 
 export const hasSignatures = createReflG<JO.DeclarationReflection>(
   RK.Method,

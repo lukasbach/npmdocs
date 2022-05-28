@@ -3,9 +3,10 @@ import React, { FC, memo, ReactNode } from "react";
 import type { JSONOutput } from "typedoc";
 import { useDocs } from "../provider/use-docs";
 import { ReflectionKind } from "../../../common/reflection-kind";
-import { isContainerReflection } from "../../../common/guards";
+import { isContainerReflection, isTypeParameter } from "../../../common/guards";
 
 import style from "./signature.module.css";
+import { useLookedUpItem } from "../../../common/use-looked-up-item";
 
 interface Props {
   type?:
@@ -13,7 +14,8 @@ interface Props {
     | JSONOutput.MappedType
     | JSONOutput.TemplateLiteralType
     | JSONOutput.NamedTupleMemberType
-    | JSONOutput.DeclarationReflection;
+    | JSONOutput.DeclarationReflection
+    | JSONOutput.TypeParameterReflection;
   reference?: JSONOutput.ReferenceType;
 }
 
@@ -43,7 +45,7 @@ const joinComponents = (
 );
 
 export const Signature = memo(function Signature({ type, reference }: Props) {
-  const { symbolDocs, moduleDocs, docs } = useDocs();
+  const typeAttachedReference = useLookedUpItem((type as any)?.id);
 
   if (!type) {
     return null;
@@ -140,14 +142,9 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
       );
     case "reference": {
       if (type.id) {
-        const referencedSymbol =
-          (isContainerReflection(symbolDocs) &&
-            symbolDocs.children.find(s => s.id === type.id)) ||
-          (isContainerReflection(moduleDocs) &&
-            moduleDocs.children.find(s => s.id === type.id)) ||
-          docs.children.find(s => s.id === type.id);
-        return referencedSymbol ? (
-          <Signature type={referencedSymbol} reference={type} />
+        console.log("!!", type, typeAttachedReference);
+        return typeAttachedReference?.reflection ? (
+          <Signature type={typeAttachedReference.reflection} reference={type} />
         ) : (
           <>{type.qualifiedName ?? type.name}</>
         );
@@ -219,7 +216,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
       );
     case "named-tuple-member":
       // TODO
-      return <>[TYPE NOT RESOLVED]</>;
+      return <>unknown*</>;
   }
 });
 
@@ -262,7 +259,7 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.ObjectLiteral:
     case ReflectionKind.Event:
     case ReflectionKind.Reference:
-      return <>[TYPE NOT RESOLVED]</>;
+      return <>unkown*</>;
   }
   return null;
 });
@@ -290,7 +287,23 @@ const DeclarationReflectionSignature = memo(
         );
 
       case ReflectionKind.TypeParameter:
-        return <>{type.name}</>;
+        return (
+          <>
+            {type.name}
+            {isTypeParameter(type) && type.type && (
+              <>
+                {" extends "}
+                <Signature type={type.type} />
+              </>
+            )}
+            {isTypeParameter(type) && type.default && (
+              <>
+                {" = "}
+                <Signature type={type.default} />
+              </>
+            )}
+          </>
+        );
 
       case ReflectionKind.Parameter:
         return (

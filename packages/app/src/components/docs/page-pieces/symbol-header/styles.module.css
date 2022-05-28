@@ -1,11 +1,19 @@
 .title {
   margin: 20px 0 8px 0;
   font-size: 1.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-weight: normal;
 }
 
 .titleHeavy {
   font-weight: bold;
-  margin: 0 10px 0 16px;
+}
+
+.titleThin {
+  font-weight: lighter;
 }
 
 .tabs {

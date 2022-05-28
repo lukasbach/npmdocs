@@ -2,10 +2,14 @@ import { useDocs } from "../components/docs/provider/use-docs";
 import { useMemo } from "react";
 import { isContainerReflection, isProject } from "./guards";
 
-export const useLookedUpItem = (id: number) => {
+export const useLookedUpItem = (id?: number) => {
   const { lookupMap } = useDocs();
 
   return useMemo(() => {
+    if (!id) {
+      return null;
+    }
+
     const item = lookupMap.get(id);
 
     if (!item) {
