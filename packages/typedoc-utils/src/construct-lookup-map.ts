@@ -1,5 +1,5 @@
 import type { JSONOutput } from "typedoc";
-import { isContainerReflection } from "./guards";
+import { getTraversableItems } from "./traversable-items";
 
 export const constructLookupMap = (reflection: JSONOutput.Reflection) => {
   const map = new Map<number, LookupMapItem>();
@@ -30,9 +30,7 @@ const traverse = (
 
   map.set(reflection.id, item);
 
-  if (isContainerReflection(reflection)) {
-    for (const child of reflection?.children ?? []) {
-      traverse(map, child, item);
-    }
+  for (const child of getTraversableItems(reflection)) {
+    traverse(map, child, item);
   }
 };

@@ -15,6 +15,7 @@ import { program } from "commander";
 import { compress } from "compress-json";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { purge } from "./purge";
 import download from "download-tarball";
 
 const tsconfig: any = {
@@ -141,8 +142,12 @@ const build = async (
 
   // TODO filter out namespaces with the name "export=", see @types/react 18.0.2
 
+  // console.log("Purging...");
+  // const purged = purge(docs);
+
+  console.log("Compressing...");
   const compressed = compress(
-    JSON.parse(JSON.stringify(docs).replaceAll("tmp/package", ""))
+    JSON.parse(JSON.stringify(purged).replaceAll("tmp/package", ""))
   );
   await writeJson(join(target, "docs.json"), compressed);
 

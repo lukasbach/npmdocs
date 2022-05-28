@@ -37,6 +37,13 @@ export const hasSignatures = createReflG<JO.DeclarationReflection>(
   RK.Function
 );
 
+export const hasInheritance = (
+  reflection: JO.Reflection
+): reflection is JO.Reflection &
+  Required<{
+    inheritedFrom: JO.DeclarationReflection["inheritedFrom"];
+  }> => (reflection as JO.DeclarationReflection).inheritedFrom !== undefined;
+
 export const isContainerReflection = (
   reflection: JO.Reflection
 ): reflection is JO.ContainerReflection =>

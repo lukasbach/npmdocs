@@ -1,8 +1,9 @@
 /packages/*/out
 /packages/*/lib
 /packages/*/tmp
+/packages/*/before
+/packages/*/after
 .idea
 node_modules
 storybook-static
 yarn-error.log
-packages/synergies/README.md

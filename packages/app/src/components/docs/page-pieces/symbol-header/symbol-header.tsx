@@ -7,6 +7,7 @@ import style from "./styles.module.css";
 import {
   isDeclarationReflection,
   isProject,
+  ReflectionKind,
 } from "@lukasbach/npmdocs-typedoc-utils";
 import { RelatedTypeList } from "./related-type-list.ts";
 import { Signature } from "../signature";
@@ -31,7 +32,7 @@ export const SymbolHeader: FC = () => {
   return (
     <div>
       <h1 className={style.title}>
-        {symbolDocs?.kindString}{" "}
+        {symbolDocs?.kind && ReflectionKind[symbolDocs.kind]}{" "}
         <span className={style.titleHeavy}>{symbolDocs?.name}</span>
         {typeParameters}
         <FlagList flags={symbolDocs.flags} />
