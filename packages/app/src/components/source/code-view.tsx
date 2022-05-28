@@ -1,16 +1,18 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { vs } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import { useHash } from "../../common/use-hash";
 import { usePkgQuery } from "../../common/use-pkg-query";
+import Editor from "@monaco-editor/react";
 import NProgress from "nprogress";
 
 import style from "./styles.module.css";
+import { useMeasure } from "react-use";
 
 export const CodeView: FC = () => {
   const hash = useHash();
   const { packageName, version } = usePkgQuery();
   const [code, setCode] = useState("");
+  const [containerRef, { x, y, width, height, top, right, bottom, left }] =
+    useMeasure();
 
   useEffect(() => {
     if (!packageName || !version || !hash) {
@@ -45,14 +47,22 @@ export const CodeView: FC = () => {
   }, [hash]);
 
   return (
-    <div>
+    <div className={style.container}>
       <div className={style.breadcrumbs}>
         {packageName}@{version}
         {hash}
       </div>
-      <SyntaxHighlighter language={language} style={vs} showLineNumbers={true}>
-        {code}
-      </SyntaxHighlighter>
+      <div className={style.editorContainer} ref={containerRef}>
+        <Editor
+          height={height}
+          language={language}
+          value={code}
+          loading={code === ""}
+          options={{
+            readOnly: true,
+          }}
+        />
+      </div>
     </div>
   );
 };
