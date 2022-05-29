@@ -5,9 +5,6 @@ import {
   updateTraversableItems,
 } from "@lukasbach/npmdocs-typedoc-utils";
 import deepEqual from "fast-deep-equal";
-import { diff as oldDiff } from "jsondiffpatch";
-import { diff as otherDiff } from "deep-diff";
-import { diff, deletedDiff } from "deep-object-diff";
 
 export const purge = (reflection: JSONOutput.Reflection) => {
   const lookup = constructLookupMap(reflection);
@@ -63,24 +60,13 @@ const purgeInheritance = (
     kindString: undefined,
   };
 
-  if (Object.keys(deletedDiff(sourceTester, reflectionTester)).length !== 0) {
-    console.log(deletedDiff(sourceTester, reflectionTester));
-    console.warn(`Entries removed from ${reflection.name}`);
+  if (!deepEqual(sourceTester, reflectionTester)) {
     return reflection;
   }
 
-  // if (!deepEqual(sourceTester, reflectionTester)) {
-  //   return reflection;
-  // }
-
-  // console.log(
-  //   `Purged inheritance from ${reflection.id} with ${source.reflection.id}`
-  // );
-
   return {
     id: reflection.id,
-    inheritedFrom: reflection.inheritedFrom,
+    dedupedInheritedFrom: reflection.inheritedFrom,
     overwrites: (reflection as any).overwrites,
-    patch: diff(sourceTester, reflectionTester),
   } as any;
 };

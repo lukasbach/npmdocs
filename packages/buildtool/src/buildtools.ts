@@ -100,11 +100,15 @@ const build = async (
   }
 
   console.log("Patching package.json...");
-  await writeJson(packageJsonPath, { ...packageJson, devDependencies: {} });
+  await writeJson(packageJsonPath, {
+    ...packageJson,
+    devDependencies: {},
+    peerDependencies: {},
+  });
 
   console.log("Installing dependencies...");
   const installProcess = await promisify(exec)(
-    "npm install --ignore-scripts --no-package-lock --production --omit=dev",
+    "npm install --ignore-scripts --no-package-lock --production --omit=dev --legacy-peer-deps",
     {
       cwd: join(tmpPath, packageFolder),
     }
