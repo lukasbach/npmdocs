@@ -2,10 +2,12 @@ import { JSONOutput } from "typedoc";
 import {
   constructLookupMap,
   hasInheritance,
-  isContainerReflection,
   updateTraversableItems,
 } from "@lukasbach/npmdocs-typedoc-utils";
 import deepEqual from "fast-deep-equal";
+import { diff as oldDiff } from "jsondiffpatch";
+import { diff as otherDiff } from "deep-diff";
+import { diff, deletedDiff } from "deep-object-diff";
 
 export const purge = (reflection: JSONOutput.Reflection) => {
   const lookup = constructLookupMap(reflection);
@@ -22,15 +24,20 @@ const traverse = <T>(
     newReflection.kindString = undefined;
   }
 
-  updateTraversableItems(newReflection, child => traverse(child, lookup));
+  const withPurgedInheritance = purgeInheritance(newReflection, lookup);
 
-  return purgeInheritance(newReflection, lookup) as any;
+  const withUpdatedChildren = updateTraversableItems(
+    withPurgedInheritance,
+    child => traverse(child, lookup)
+  );
+
+  return withUpdatedChildren as any;
 };
 
 const purgeInheritance = (
   reflection: JSONOutput.Reflection,
   lookup: ReturnType<typeof constructLookupMap>
-) => {
+): JSONOutput.Reflection => {
   if (!hasInheritance(reflection)) {
     return reflection;
   }
@@ -45,33 +52,35 @@ const purgeInheritance = (
     ...source.reflection,
     id: undefined,
     inheritedFrom: undefined,
+    overwrites: undefined,
     kindString: undefined,
-    typeArguments: undefined,
   };
   const reflectionTester = {
     ...reflection,
     id: undefined,
     inheritedFrom: undefined,
+    overwrites: undefined,
     kindString: undefined,
-    typeArguments: undefined,
   };
 
-  // console.log(source.reflection.id, reflection.id);
-  if (reflection.id === 160 && source.reflection.id === 20) {
-    console.log(
-      JSON.stringify(sourceTester),
-      JSON.stringify(reflectionTester),
-      deepEqual(sourceTester, reflectionTester)
-    );
-  }
-
-  if (!deepEqual(sourceTester, reflectionTester)) {
+  if (Object.keys(deletedDiff(sourceTester, reflectionTester)).length !== 0) {
+    console.log(deletedDiff(sourceTester, reflectionTester));
+    console.warn(`Entries removed from ${reflection.name}`);
     return reflection;
   }
+
+  // if (!deepEqual(sourceTester, reflectionTester)) {
+  //   return reflection;
+  // }
+
+  // console.log(
+  //   `Purged inheritance from ${reflection.id} with ${source.reflection.id}`
+  // );
 
   return {
     id: reflection.id,
     inheritedFrom: reflection.inheritedFrom,
-    typeArguments: (reflection as any).typeArguments,
-  };
+    overwrites: (reflection as any).overwrites,
+    patch: diff(sourceTester, reflectionTester),
+  } as any;
 };

@@ -142,8 +142,9 @@ const build = async (
 
   // TODO filter out namespaces with the name "export=", see @types/react 18.0.2
 
-  // console.log("Purging...");
-  // const purged = purge(docs);
+  console.log("Purging...");
+  const purged = purge(docs);
+  await writeJson(join(target, "purged.json"), purged, { spaces: 2 });
 
   console.log("Compressing...");
   const compressed = compress(
