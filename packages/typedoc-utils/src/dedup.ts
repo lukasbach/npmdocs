@@ -1,12 +1,8 @@
 import { JSONOutput } from "typedoc";
-import {
-  constructLookupMap,
-  hasInheritance,
-  updateTraversableItems,
-} from "@lukasbach/npmdocs-typedoc-utils";
 import deepEqual from "fast-deep-equal";
+import { constructLookupMap, hasInheritance, updateTraversableItems } from ".";
 
-export const purge = (reflection: JSONOutput.Reflection) => {
+export const dedup = (reflection: JSONOutput.Reflection) => {
   const lookup = constructLookupMap(reflection);
   return traverse(reflection, lookup);
 };

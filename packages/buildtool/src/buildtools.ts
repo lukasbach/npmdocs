@@ -15,7 +15,7 @@ import { program } from "commander";
 import { compress } from "compress-json";
 import { exec } from "child_process";
 import { promisify } from "util";
-import { purge } from "./purge";
+import { dedup } from "@lukasbach/npmdocs-typedoc-utils";
 import download from "download-tarball";
 
 const tsconfig: any = {
@@ -88,7 +88,6 @@ const build = async (
   const types = packageJson.types ?? packageJson.typings;
 
   if (!types) {
-    // TODO find @types package if not found here.
     await writeJson(
       join(target, "docs.json"),
       compress({
@@ -147,7 +146,7 @@ const build = async (
   // TODO filter out namespaces with the name "export=", see @types/react 18.0.2
 
   console.log("Purging...");
-  const purged = purge(docs);
+  const purged = dedup(docs);
   await writeJson(join(target, "purged.json"), purged, { spaces: 2 });
 
   console.log("Compressing...");

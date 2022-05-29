@@ -5,13 +5,30 @@ import { useHash } from "../../../common/use-hash";
 import { usePackageDocs } from "../../../api/api-helpers";
 import { ReflectionKind } from "../../../common/reflection-kind";
 import { getResolvedGroups } from "../../../common/get-resolved-groups";
-import { isContainerReflection } from "@lukasbach/npmdocs-typedoc-utils";
+import { isContainerReflection, redup } from "@lukasbach/npmdocs-typedoc-utils";
 import { useConstructLookupMap } from "./use-construct-lookup-map";
+
+const useRedupedDocs: typeof usePackageDocs = (
+  encodedPackageName: string,
+  version: string
+) => {
+  const docs = usePackageDocs(encodedPackageName, version);
+
+  const redupedDocs = useMemo(
+    () => (!docs.data ? null : redup(docs.data)),
+    [docs.data]
+  );
+
+  return {
+    ...docs,
+    data: redupedDocs,
+  } as ReturnType<typeof usePackageDocs>;
+};
 
 export const useConstructDocs = () => {
   const { packageName, encodedPackageName, version } = usePkgQuery();
   const hash = useHash();
-  const docs = usePackageDocs(encodedPackageName, version);
+  const docs = useRedupedDocs(encodedPackageName, version);
   const lookupMap = useConstructLookupMap(docs.data);
 
   const additionals = useMemo(() => {
