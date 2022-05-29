@@ -13,10 +13,6 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    const mode = localStorage.getItem("mode") ?? "light";
-    document.body.classList.add(mode);
-  }, []);
   return (
     <SettingsProvider>
       <Component {...pageProps} />

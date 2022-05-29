@@ -12,9 +12,9 @@ export const SearchTab: FC = () => {
       <SettingsField label="Check Case">
         <BooleanSetting setting="searchCheckCase" />
       </SettingsField>
-      <SettingsField label="Check full path">
+      {/*<SettingsField label="Check full path">
         <BooleanSetting setting="searchCheckFullPath" />
-      </SettingsField>
+      </SettingsField> TODO */}
       <SettingsField label="Result Limit">
         <NumberSetting setting="searchListCount" />
       </SettingsField>

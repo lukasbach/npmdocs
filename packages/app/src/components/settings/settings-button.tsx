@@ -3,12 +3,12 @@ import { Portal } from "@reach/portal";
 import * as popover from "@zag-js/popover";
 import { useMachine, useSetup } from "@zag-js/react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
-
-import style from "./styles.module.css";
 import "@reach/tabs/styles.css";
 import { GeneralTab } from "./general-tab";
 import { SearchTab } from "./search-tab";
 import { HotkeysTab } from "./hotkeys-tab";
+
+import style from "./styles.module.css";
 
 export const SettingsButton: FC<{
   children: (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => ReactNode;
@@ -18,7 +18,7 @@ export const SettingsButton: FC<{
   const api = popover.connect(state, send);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={style.settingsButtonContainer}>
       {children(api.triggerProps)}
       <Portal>
         <div {...api.positionerProps}>

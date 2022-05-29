@@ -35,3 +35,7 @@
 }
 .hotkeySeparator {
 }
+
+.settingsButtonContainer button {
+  height: 100%;
+}

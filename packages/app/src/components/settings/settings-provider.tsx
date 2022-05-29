@@ -1,4 +1,11 @@
-import React, { createContext, FC, ReactNode, useMemo, useRef } from "react";
+import React, {
+  createContext,
+  FC,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useAsyncRetry, useLocalStorage, useThrottle } from "react-use";
 import { Settings } from "./types";
 
@@ -27,11 +34,26 @@ export const SettingsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [settings, update] = useLocalStorage<Partial<Settings>>("settings", {});
   const settingsRef = useRef(settings);
   // const throttledSettings = useThrottle(settings, 500);
+
+  useEffect(() => {
+    document.body.classList.add(settings.darkMode ? "dark" : "light");
+  }, []);
+
   const completeSettings = useMemo(
     () => ({
       ...defaultSettings,
       ...settings,
-      update: partial => update({ ...settingsRef.current, ...partial }),
+      update: (partial: Partial<Settings>) => {
+        const updated = { ...settingsRef.current, ...partial };
+        update(updated);
+
+        const prevMode = settingsRef.current.darkMode ? "dark" : "light";
+        const newMode = updated.darkMode ? "dark" : "light";
+        if (prevMode !== newMode) {
+          document.body.classList.remove(prevMode);
+          document.body.classList.add(newMode);
+        }
+      },
     }),
     [settings]
   );
