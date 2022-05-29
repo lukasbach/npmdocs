@@ -84,10 +84,10 @@ input::placeholder {
 
 .dark {
   --primary: var(--indigo1);
-  --bg: var(--dark-gray2);
-  --subtle: var(--dark-gray3);
+  --bg: var(--black);
+  --subtle: var(--dark-gray2);
   --header: var(--dark-gray1);
-  --sidebar: var(--dark-gray3);
+  --sidebar: var(--dark-gray2);
   --sidebar-item-hover: var(--dark-gray4);
   --sidebar-item-active: var(--dark-gray5);
   --text-on-sidebar: var(--white);
@@ -110,9 +110,9 @@ input::placeholder {
   --input-border: var(--gray1);
   --input-outline: var(--dark-gray5);
 
-  --signature-block-bg: var(--gray3);
-  --signature-block-bg-hover: var(--gray2);
-  --signature-block-bg-selected: var(--gray1);
+  --signature-block-bg: var(--dark-gray4);
+  --signature-block-bg-hover: var(--dark-gray3);
+  --signature-block-bg-selected: var(--dark-gray2);
   --docs-item-detail-line-text: var(--gray3);
   --symbol-highlight: #685921;
 
@@ -136,8 +136,8 @@ input::placeholder {
   --light-gray1: #d3d8de;
   --light-gray2: #dce0e5;
   --light-gray3: #e5e8eb;
-  --light-gray4: #edeff2;
-  --light-gray5: #f6f7f9;
+  --light-gray4: #f1f3f5;
+  --light-gray5: #f7f9fa;
   --white: #ffffff;
   --blue1: #184a90;
   --blue2: #215db0;
