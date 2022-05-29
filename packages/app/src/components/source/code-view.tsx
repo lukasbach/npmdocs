@@ -6,12 +6,14 @@ import NProgress from "nprogress";
 
 import style from "./styles.module.css";
 import { useMeasure } from "react-use";
+import { useSettings } from "../settings/use-settings";
 
 export const CodeView: FC = () => {
   const hash = useHash();
   const { packageName, version } = usePkgQuery();
   const [code, setCode] = useState("");
   const [containerRef, { height }] = useMeasure();
+  const { darkMode } = useSettings();
 
   useEffect(() => {
     if (!packageName || !version || !hash) {
@@ -56,6 +58,7 @@ export const CodeView: FC = () => {
           height={height}
           language={language}
           value={code}
+          theme={darkMode ? "vs-dark" : "vs-light"}
           loading={code === ""}
           options={{
             readOnly: true,
