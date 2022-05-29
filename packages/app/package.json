@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.2.0-alpha.0",
+  "version": "0.2.0-alpha.1",
   "private": true,
   "scripts": {
     "start": "next dev",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@documentalist/client": "^4.0.0",
-    "@lukasbach/npmdocs-typedoc-utils": "^0.2.0-alpha.0",
+    "@lukasbach/npmdocs-typedoc-utils": "^0.2.0-alpha.1",
     "@monaco-editor/react": "^4.4.5",
     "@octokit/rest": "^18.12.0",
     "@popperjs/core": "^2.11.5",
