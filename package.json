@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "lerna run start --parallel --npm-client=yarn",
+    "start": "lerna run start --parallel --npm-client=yarn --ignore @lukasbach/npmdocs-buildtool",
     "build": "lerna run build --npm-client=yarn",
     "test": "lerna run test --npm-client=yarn --stream",
     "prettier:check": "prettier --check .",

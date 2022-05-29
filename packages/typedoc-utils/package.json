@@ -12,6 +12,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
+    "start": "tsc -w",
     "prepublish": "yarn build"
   },
   "publishConfig": {
