@@ -31,11 +31,11 @@ export const SymbolHeader: FC = () => {
     );
 
   const tabListRef = useRef<HTMLDivElement>(null);
-  useHotKey("1", () => tabListRef.current?.children.item(0)?.click());
-  useHotKey("2", () => tabListRef.current?.children.item(1)?.click());
-  useHotKey("3", () => tabListRef.current?.children.item(2)?.click());
-  useHotKey("4", () => tabListRef.current?.children.item(3)?.click());
-  useHotKey("5", () => tabListRef.current?.children.item(4)?.click());
+  useHotKey("1", () => (tabListRef as any).current?.children.item(0)?.click());
+  useHotKey("2", () => (tabListRef as any).current?.children.item(1)?.click());
+  useHotKey("3", () => (tabListRef as any).current?.children.item(2)?.click());
+  useHotKey("4", () => (tabListRef as any).current?.children.item(3)?.click());
+  useHotKey("5", () => (tabListRef as any).current?.children.item(4)?.click());
 
   return (
     <div>
