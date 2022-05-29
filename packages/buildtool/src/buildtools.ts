@@ -147,7 +147,6 @@ const build = async (
 
   console.log("Purging...");
   const purged = dedup(docs);
-  await writeJson(join(target, "purged.json"), purged, { spaces: 2 });
 
   console.log("Compressing...");
   const compressed = compress(
