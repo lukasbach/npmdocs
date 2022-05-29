@@ -7,6 +7,7 @@ import { useEventBus } from "../../common/use-event-bus";
 
 import "@reach/dialog/styles.css";
 import style from "./styles.module.css";
+import { useHotKey } from "../../common/useHotKey";
 
 export const Search: FC = () => {
   const [showDialog, setShowDialog] = useState(false);
@@ -25,8 +26,9 @@ export const Search: FC = () => {
     setSearchValue("");
   }, []);
 
-  useKey(".", onOpen);
-  useKey("f1", onOpen);
+  useHotKey(".", onOpen);
+  useHotKey("s", onOpen);
+  useHotKey("f1", onOpen);
 
   useKey("ArrowUp", () => {
     if (!containerRef.current?.contains(document.activeElement)) {

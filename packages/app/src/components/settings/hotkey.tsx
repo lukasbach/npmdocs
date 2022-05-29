@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from "react";
 
 import style from "./styles.module.css";
 
-export const Hotkey: FC<{ keys: string[] }> = ({ keys }) => {
+export const Hotkey: FC<{ keys: Array<string | ReactNode> }> = ({ keys }) => {
   return (
     <>
       {keys.map((key, index, arr) => (

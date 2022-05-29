@@ -18,9 +18,15 @@ import { SymbolSource } from "./source/symbol-source";
 import { Overview } from "./overview/overview";
 import { RawSource } from "./source/raw-source";
 import { PackagejsonSource } from "./source/packagejson-source";
+import { useEventBus } from "../../common/use-event-bus";
+import { useHotKey } from "../../common/useHotKey";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs, error, packageName, version } = useDocs();
+  const onToggleExpandedItems = useEventBus<boolean>("toggle-expanded-items");
+
+  useHotKey("+", () => onToggleExpandedItems(true));
+  useHotKey("-", () => onToggleExpandedItems(false));
 
   if (error) {
     return (

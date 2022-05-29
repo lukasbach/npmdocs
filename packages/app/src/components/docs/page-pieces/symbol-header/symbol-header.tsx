@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useRef } from "react";
 import { useDocs } from "../../provider/use-docs";
 import { FlagList } from "../flag-list";
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@reach/tabs";
@@ -12,6 +12,7 @@ import {
 import { RelatedTypeList } from "./related-type-list.ts";
 import { Signature } from "../signature";
 import { TabButtons } from "./tab-buttons";
+import { useHotKey } from "../../../../common/useHotKey";
 
 export const SymbolHeader: FC = () => {
   const { symbolDocs } = useDocs();
@@ -28,6 +29,13 @@ export const SymbolHeader: FC = () => {
         {">"}
       </span>
     );
+
+  const tabListRef = useRef<HTMLDivElement>(null);
+  useHotKey("1", () => tabListRef.current?.children.item(0)?.click());
+  useHotKey("2", () => tabListRef.current?.children.item(1)?.click());
+  useHotKey("3", () => tabListRef.current?.children.item(2)?.click());
+  useHotKey("4", () => tabListRef.current?.children.item(3)?.click());
+  useHotKey("5", () => tabListRef.current?.children.item(4)?.click());
 
   return (
     <div>
@@ -83,6 +91,7 @@ export const SymbolHeader: FC = () => {
       <TabList
         className={style.tabs}
         key={`docstabs-${isProject(symbolDocs) ? "project" : "symbol"}`} // re-render tabs when switching between project and symbol
+        ref={tabListRef}
       >
         <Tab>Docs</Tab>
         <Tab>Hierarchy</Tab>

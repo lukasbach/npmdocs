@@ -31,7 +31,9 @@
   background-color: var(--flag-bg);
   color: var(--flag-text);
   border-radius: 999px;
-  padding: 0 8px;
+  margin: 1px 0;
+  padding: 2px 8px;
+  display: inline-flex;
 }
 .hotkeySeparator {
 }
