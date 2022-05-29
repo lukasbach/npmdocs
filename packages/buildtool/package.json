@@ -24,7 +24,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
-    "@lukasbach/npmdocs-typedoc-utils": "^0.2.0-alpha.0",
     "@testing-library/dom": "^8.13.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -44,6 +43,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
+    "@lukasbach/npmdocs-typedoc-utils": "^0.2.0-alpha.0",
     "commander": "^9.2.0",
     "compress-json": "^2.0.1",
     "download-tarball": "^2.0.0",
