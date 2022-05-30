@@ -22,12 +22,13 @@ export interface LookupMapItem {
 
 const traverse = (
   map: Map<number, LookupMapItem>,
-  reflection: JSONOutput.Reflection | JSONOutput.SomeType,
+  reflection: JSONOutput.Reflection,
   parent?: LookupMapItem
 ) => {
   if (
-    !isReflection(reflection) ||
-    reflection.kind === ReflectionKind.Reference
+    (isReflection(reflection) &&
+      reflection.kind === ReflectionKind.Reference) ||
+    (reflection as any).type === "reference"
   ) {
     return;
   }
