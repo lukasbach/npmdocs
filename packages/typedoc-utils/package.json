@@ -1,6 +1,6 @@
 {
   "name": "@lukasbach/npmdocs-typedoc-utils",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:lukasbach/npmdocs.git",
