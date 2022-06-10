@@ -11,3 +11,9 @@ searchoptions:
 dont include container items like methods and parameters
 check case
 check full path
+
+favicon
+
+http://localhost:3000/@zag-js__core/0.1.5#StateMachine.ActionMap
+http://localhost:3000/@zag-js__core/0.1.5#StateMachine.PureActions (Dict)
+http://localhost:3000/@zag-js__core/0.1.5#StateMachine

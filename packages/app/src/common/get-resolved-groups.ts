@@ -3,7 +3,7 @@ import type { JSONOutput } from "typedoc";
 export const getResolvedGroups = (container: JSONOutput.ContainerReflection) =>
   container.groups.map(group => ({
     ...group,
-    resolvedChildren: group.children.map(child => {
+    resolvedChildren: group.children?.map(child => {
       const resolvedChild = container.children.find(c => c.id === child);
 
       if (resolvedChild) {
