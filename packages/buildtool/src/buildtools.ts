@@ -51,6 +51,21 @@ const scanFolderStructure = async (currentFolder = tmpPath) => {
   return currentObj;
 };
 
+const getTypePrefix = (
+  typesVersions?: Record<
+    string,
+    Record<string, string[] | undefined> | undefined
+  >
+) => {
+  return typesVersions &&
+    Object.keys(Object.values(typesVersions)[0] ?? {})[0] === "*"
+    ? Object.values(Object.values(typesVersions)?.[0] ?? {})?.[0]?.[0]?.slice(
+        0,
+        -1
+      ) ?? ""
+    : "";
+};
+
 const build = async (
   packageName: string,
   version: string,
@@ -87,9 +102,9 @@ const build = async (
   const packageFolder = (await readdir(tmpPath))[0];
   const packageJsonPath = join(tmpPath, packageFolder, "package.json");
   const packageJson = await readJSON(packageJsonPath);
-  const types = packageJson.types ?? packageJson.typings;
+  const typesWithoutPrefix = packageJson.types ?? packageJson.typings;
 
-  if (!types) {
+  if (!typesWithoutPrefix) {
     await writeJson(
       join(target, "docs.json"),
       compress({
@@ -99,6 +114,8 @@ const build = async (
     );
     return;
   }
+
+  const types = getTypePrefix(packageJson.typesVersions) + typesWithoutPrefix;
 
   console.log("Patching package.json...");
   await writeJson(packageJsonPath, {
