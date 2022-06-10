@@ -17,7 +17,11 @@ export const DependenciesPage: FC<{}> = () => {
       <ListContainer>
         {data?.dependencies &&
           Object.entries(data.dependencies).map(([pkg, v]) => (
-            <ListItem key={pkg} href={`/${pkg}`} right={<>{v}</>}>
+            <ListItem
+              key={pkg}
+              href={`/${pkg.replace("/", "__")}`}
+              right={<>{v}</>}
+            >
               {pkg}
             </ListItem>
           ))}
@@ -27,7 +31,11 @@ export const DependenciesPage: FC<{}> = () => {
       <ListContainer>
         {data?.devDependencies &&
           Object.entries(data.devDependencies).map(([pkg, v]) => (
-            <ListItem key={pkg} href={`/${pkg}`} right={<>{v}</>}>
+            <ListItem
+              key={pkg}
+              href={`/${pkg.replace("/", "__")}`}
+              right={<>{v}</>}
+            >
               {pkg}
             </ListItem>
           ))}
