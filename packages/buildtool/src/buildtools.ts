@@ -9,6 +9,7 @@ import {
   readJSON,
   writeJson,
   remove,
+  stat,
 } from "fs-extra";
 import { join } from "path";
 import { program } from "commander";
@@ -35,6 +36,7 @@ const tsconfig: any = {
 
 const tmpPath = "./tmp";
 const tsconfigPath = join(tmpPath, "tsconfig.json");
+const maxSize = 1024 * 1024 * 3.5;
 
 const scanFolderStructure = async (currentFolder = tmpPath) => {
   const currentObj = {};
@@ -152,7 +154,25 @@ const build = async (
   const compressed = compress(
     JSON.parse(JSON.stringify(purged).replaceAll("tmp/package", ""))
   );
-  await writeJson(join(target, "docs.json"), compressed);
+  const docsFile = join(target, "docs.json");
+  await writeJson(docsFile, compressed);
+
+  const { size } = await stat(docsFile);
+  console.log(`Docs file is ${Math.floor(size / 1024)}kb in size`);
+
+  if (size > maxSize) {
+    console.log("File too large, aborting...");
+    await writeJson(
+      join(target, "docs.json"),
+      compress({
+        error: `Docs file is larger than maximum file size (${Math.floor(
+          size / 1024
+        )}kb).`,
+        errorCode: "docs-too-big",
+        size,
+      })
+    );
+  }
 
   // await remove(tmpPath);
 };
