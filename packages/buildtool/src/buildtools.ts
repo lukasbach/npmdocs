@@ -189,8 +189,9 @@ const build = async (
     maybeFile("README.txt") ??
     maybeFile("readme.md") ??
     maybeFile("readme.txt");
-  if (readmeFile) {
-    await writeFile(join(target, "readme.md"), readmeFile, {
+  const readmeFileContents = readmeFile ? await readFile(readmeFile) : null;
+  if (readmeFileContents) {
+    await writeFile(join(target, "readme.md"), readmeFileContents, {
       encoding: "utf-8",
     });
   } else {
