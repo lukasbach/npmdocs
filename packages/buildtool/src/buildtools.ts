@@ -10,6 +10,8 @@ import {
   writeJson,
   remove,
   stat,
+  writeFile,
+  readFile,
 } from "fs-extra";
 import { join } from "path";
 import { program } from "commander";
@@ -176,6 +178,14 @@ const build = async (
   );
   const docsFile = join(target, "docs.json");
   await writeJson(docsFile, compressed);
+
+  console.log("Copying readme...");
+  await writeFile(
+    join(target, "readme.md"),
+    (await readFile(join(tmpPath, packageFolder, "README.md"))) ??
+      (await readFile(join(tmpPath, packageFolder, "readme.md"))),
+    { encoding: "utf-8" }
+  );
 
   const { size } = await stat(docsFile);
   console.log(`Docs file is ${Math.floor(size / 1024)}kb in size`);
