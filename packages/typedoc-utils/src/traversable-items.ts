@@ -14,6 +14,10 @@ export const getTraversableItems = (reflection: JSONOutput.Reflection) => {
 const getSubPropsWithChildren = (obj: any) => {
   const items: JSONOutput.Reflection[] = [];
 
+  if (!obj) {
+    return [];
+  }
+
   if (Array.isArray(obj) && obj.length > 0 && "id" in obj[0]) {
     items.push(...obj);
   }
