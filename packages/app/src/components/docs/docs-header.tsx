@@ -13,6 +13,7 @@ import { HeaderExpander } from "../common/header/header-expander";
 import { usePkgQuery } from "../../common/use-pkg-query";
 import { HeaderRight } from "../shared/header/header-right";
 import { HeaderLeft } from "../shared/header/header-left";
+import { ExternalLinks } from "./external-links";
 
 export const DocsHeader: React.FC<{}> = props => {
   const { version, encodedPackageName, packageName } = usePkgQuery();
@@ -45,14 +46,7 @@ export const DocsHeader: React.FC<{}> = props => {
           ))}
         </HeaderButton>
       )}
-      <HeaderButton text="External Links">
-        <HeaderListButton>Repository</HeaderListButton>
-        <HeaderListButton>Bugs</HeaderListButton>
-        <HeaderListButton>NPM Page</HeaderListButton>
-        <HeaderListButton>Homepage</HeaderListButton>
-        <HeaderListButton>Bundlephobia</HeaderListButton>
-        <HeaderListButton>Packagephobia</HeaderListButton>
-      </HeaderButton>
+      <ExternalLinks />
       {about?.maintainers?.length && (
         <HeaderButton text="Maintainers">
           {about.maintainers.map(({ name, email }) => (
