@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { useEffect } from "react";
+import Head from "next/head";
 import React from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
@@ -16,6 +16,10 @@ function MyApp({ Component, pageProps }) {
   return (
     <SettingsProvider>
       <Component {...pageProps} />
+      <Head>
+        <link rel="icon" href="/_res/favicon.ico" sizes="any" />
+        <link rel="icon" href="/_res/favicon.svg" type="image/svg+xml" />
+      </Head>
     </SettingsProvider>
   );
 }

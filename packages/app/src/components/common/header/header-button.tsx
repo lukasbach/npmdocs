@@ -11,6 +11,7 @@ export const HeaderButton: FC<{
   onClick?: () => void;
   href?: string;
   buttonProps?: HTMLProps<HTMLElement>;
+  isExternal?: string;
 }> = props => {
   const hasPopover = !!props.children;
   const Component = props.href ? "a" : "button";
@@ -47,6 +48,7 @@ export const HeaderButton: FC<{
       }}
       className={style.headerBtn}
       {...(props.buttonProps as any)}
+      {...(props.isExternal ? { target: "_blank", rel: "noopener" } : {})}
     >
       {props.text}
       {hasPopover && <IoChevronDownSharp />}

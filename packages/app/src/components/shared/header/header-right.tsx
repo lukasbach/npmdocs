@@ -9,7 +9,7 @@ export const HeaderRight: FC = () => {
   return (
     <>
       <PackageSearchInput />
-      <HeaderButton text="@lukasbach" />
+      <HeaderButton text="@lukasbach" href="https://github.com/lukasbach" />
       <ColormodeButton />
       <SettingsButton>
         {props => (

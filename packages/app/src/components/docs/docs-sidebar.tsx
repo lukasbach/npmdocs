@@ -59,7 +59,7 @@ export const DocsSidebar: React.FC<{
       <SidebarItem href={`/${docsBaseUrl}#`} selected={route.length === 0}>
         Global Exports
       </SidebarItem>
-      {groups.find(isNamespace)?.resolvedChildren.map(namespace => (
+      {groups?.find(isNamespace)?.resolvedChildren.map(namespace => (
         <SidebarItem
           href={`/${docsBaseUrl}#${namespace.name}`}
           key={namespace.name}
@@ -69,7 +69,7 @@ export const DocsSidebar: React.FC<{
         </SidebarItem>
       ))}
 
-      {moduleGroups
+      {moduleGroups?
         .filter(group => !isNamespace(group))
         .map(({ title, resolvedChildren }) => (
           <React.Fragment key={title}>
