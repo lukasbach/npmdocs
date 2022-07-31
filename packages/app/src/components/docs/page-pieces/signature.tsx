@@ -242,6 +242,7 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.TypeAlias:
     case ReflectionKind.Constructor:
     case ReflectionKind.Function:
+    case ReflectionKind.TypeLiteral:
       return (
         <DeclarationReflectionSignature type={type} reference={reference} />
       );
@@ -252,7 +253,6 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.GetSignature:
       return <SignatureReflectionSignature type={type} reference={reference} />;
 
-    case ReflectionKind.TypeLiteral:
     case ReflectionKind.ObjectLiteral:
       return (
         <>
@@ -261,7 +261,6 @@ const ReflectionSignature = memo(function ReflectionSignature({
             (child, i, arr) => (
               <React.Fragment key={i}>
                 {child.name}: <Signature type={child} />;{" "}
-                {i < arr.length - 1 && ", "}
               </React.Fragment>
             )
           )}
@@ -297,9 +296,10 @@ const DeclarationReflectionSignature = memo(
       case ReflectionKind.Method:
       case ReflectionKind.Constructor:
       case ReflectionKind.Function:
+      case ReflectionKind.TypeLiteral:
         return (
           <ReflectionSignature
-            type={type.signatures[0]}
+            type={type.signatures?.[0] ?? type.children?.[0]}
             reference={reference}
           />
         );
