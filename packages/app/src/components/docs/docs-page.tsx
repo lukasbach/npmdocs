@@ -91,15 +91,15 @@ export const DocsPage: React.FC = props => {
           </TabPanel>*/}
 
           <TabPanel>
-            <RawSource tabIndex={2} />
+            <RawSource tabIndex={1} />
           </TabPanel>
 
           <TabPanel>
-            <SymbolSource tabIndex={3} />
+            <SymbolSource tabIndex={2} />
           </TabPanel>
 
           <TabPanel key="overview">
-            <PackagejsonSource tabIndex={4} />
+            <PackagejsonSource tabIndex={3} />
           </TabPanel>
         </TabPanels>
       </Tabs>
