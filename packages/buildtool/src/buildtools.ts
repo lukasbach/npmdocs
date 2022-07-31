@@ -115,7 +115,10 @@ const build = async (
     return;
   }
 
-  const types = getTypePrefix(packageJson.typesVersions) + typesWithoutPrefix;
+  const typesPrefix = getTypePrefix(packageJson.typesVersions);
+  const types = typesPrefix + typesWithoutPrefix;
+
+  console.log(`Using types ${types} (with prefix ${typesPrefix})`);
 
   console.log("Patching package.json...");
   await writeJson(packageJsonPath, {
@@ -133,7 +136,7 @@ const build = async (
   );
   console.log(installProcess.stdout);
 
-  console.log(`Using types ${join(tmpPath, packageFolder, types)}`);
+  console.log(`Using full type path ${join(tmpPath, packageFolder, types)}`);
   console.log(`Using tsconfig from ${tsconfigPath}`);
 
   if (!existsSync(tsconfigPath)) {
