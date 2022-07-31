@@ -180,12 +180,22 @@ const build = async (
   await writeJson(docsFile, compressed);
 
   console.log("Copying readme...");
-  await writeFile(
-    join(target, "readme.md"),
-    (await readFile(join(tmpPath, packageFolder, "README.md"))) ??
-      (await readFile(join(tmpPath, packageFolder, "readme.md"))),
-    { encoding: "utf-8" }
-  );
+  const maybeFile = (file: string) =>
+    existsSync(join(tmpPath, packageFolder, file))
+      ? join(tmpPath, packageFolder, file)
+      : undefined;
+  const readmeFile =
+    maybeFile("README.md") ??
+    maybeFile("README.txt") ??
+    maybeFile("readme.md") ??
+    maybeFile("readme.txt");
+  if (readmeFile) {
+    await writeFile(join(target, "readme.md"), readmeFile, {
+      encoding: "utf-8",
+    });
+  } else {
+    console.log("Skipping, readme not found...");
+  }
 
   const { size } = await stat(docsFile);
   console.log(`Docs file is ${Math.floor(size / 1024)}kb in size`);

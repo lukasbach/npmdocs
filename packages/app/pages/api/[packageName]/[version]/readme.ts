@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { setCacheHeader } from "../../_setCacheHeader";
+import { getFile } from "../../../../src/github/helpers";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { packageName, version } = req.query;
@@ -12,9 +13,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const versionWithReadme = versions.find(v => v.readme?.length);
 
   if (!versionWithReadme) {
-    res.status(404).json({
-      error: "No readme found",
-    });
+    const fixedPackage = (packageName as string).replace(/__/g, "/");
+    const result = await getFile<any>(
+      `packages/${fixedPackage}/${version}/readme.md`
+    );
+
+    if (!result) {
+      res.status(404).end();
+      return;
+    }
+
+    setCacheHeader(res);
+    res.status(200).json(result);
   } else {
     setCacheHeader(res);
     res.status(200).json({
