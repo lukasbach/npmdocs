@@ -11,7 +11,7 @@ export const HeaderButton: FC<{
   onClick?: () => void;
   href?: string;
   buttonProps?: HTMLProps<HTMLElement>;
-  isExternal?: string;
+  isExternal?: boolean;
 }> = props => {
   const hasPopover = !!props.children;
   const Component = props.href ? "a" : "button";
