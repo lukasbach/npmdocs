@@ -20,7 +20,10 @@ export const SignatureBlock: FC<{
   return (
     <ul className={style.signatureBlockList}>
       {signatures.map((signature, index) => (
-        <button key={signature.id} className={style.signatureBlockListButton}>
+        <button
+          key={signature.id ?? "-"}
+          className={style.signatureBlockListButton}
+        >
           <li
             className={[
               style.signatureBlockListItem,

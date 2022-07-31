@@ -65,8 +65,21 @@ export const DocsPage: React.FC = props => {
                   ))}
 
                 {isFunction(symbolDocs) && <SymbolItem item={symbolDocs} />}
+
                 {isTypeAlias(symbolDocs) && (
-                  <SignatureBlock item={symbolDocs.type} />
+                  <>
+                    <SignatureBlock item={symbolDocs.type} />
+                    {isContainerReflection(
+                      (symbolDocs as any).type?.declaration
+                    ) &&
+                      (symbolDocs as any).type.declaration.groups.map(group => (
+                        <SymbolGroup
+                          group={group}
+                          docsRoot={(symbolDocs as any).type.declaration}
+                          key={group.title}
+                        />
+                      ))}
+                  </>
                 )}
               </>
             )}

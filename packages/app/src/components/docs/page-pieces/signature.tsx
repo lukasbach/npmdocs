@@ -252,14 +252,29 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.GetSignature:
       return <SignatureReflectionSignature type={type} reference={reference} />;
 
+    case ReflectionKind.TypeLiteral:
+    case ReflectionKind.ObjectLiteral:
+      return (
+        <>
+          {"{ "}
+          {(type as JSONOutput.ContainerReflection).children?.map(
+            (child, i, arr) => (
+              <React.Fragment key={i}>
+                {child.name}: <Signature type={child} />;{" "}
+                {i < arr.length - 1 && ", "}
+              </React.Fragment>
+            )
+          )}
+          {"}"}
+        </>
+      );
+
     case ReflectionKind.Project:
     case ReflectionKind.Module:
     case ReflectionKind.Namespace:
     case ReflectionKind.Variable:
     case ReflectionKind.IndexSignature:
-    case ReflectionKind.TypeLiteral:
     case ReflectionKind.Accessor:
-    case ReflectionKind.ObjectLiteral:
     case ReflectionKind.Event:
     case ReflectionKind.Reference:
       return <>unkown*</>;

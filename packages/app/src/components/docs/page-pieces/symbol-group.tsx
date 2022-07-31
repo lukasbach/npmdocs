@@ -8,20 +8,22 @@ import { ReflectionKind } from "../../../common/reflection-kind";
 
 const isNumber = (value: any) => !isNaN(value);
 
-export const SymbolGroup: FC<{ group: JSONOutput.ReflectionGroup }> = ({
-  group,
-}) => {
+export const SymbolGroup: FC<{
+  group: JSONOutput.ReflectionGroup;
+  docsRoot?: JSONOutput.ContainerReflection;
+}> = ({ group, docsRoot: maybeDocsRoot }) => {
   const { symbolDocs } = useDocs();
   const { hideInheritedMembers, sortEnumsByValue } = useSettings();
+  const docsRoot = maybeDocsRoot ?? symbolDocs;
 
   const sortEnums = useCallback(
     (itemA: number, itemB: number) => {
       const resolvedItemA =
-        isContainerReflection(symbolDocs) &&
-        symbolDocs.children.find(child => child.id === itemA);
+        isContainerReflection(docsRoot) &&
+        docsRoot.children.find(child => child.id === itemA);
       const resolvedItemB =
-        isContainerReflection(symbolDocs) &&
-        symbolDocs.children.find(child => child.id === itemB);
+        isContainerReflection(docsRoot) &&
+        docsRoot.children.find(child => child.id === itemB);
       return isNumber(resolvedItemA?.defaultValue) &&
         isNumber(resolvedItemB?.defaultValue)
         ? parseInt(resolvedItemA?.defaultValue) -
@@ -30,7 +32,7 @@ export const SymbolGroup: FC<{ group: JSONOutput.ReflectionGroup }> = ({
             resolvedItemB?.defaultValue
           );
     },
-    [symbolDocs]
+    [docsRoot]
   );
 
   const list = useMemo(
@@ -46,8 +48,8 @@ export const SymbolGroup: FC<{ group: JSONOutput.ReflectionGroup }> = ({
       <h2>{group.title}</h2>
       {list.map(childId => {
         const item =
-          isContainerReflection(symbolDocs) &&
-          symbolDocs.children.find(child => child.id === childId);
+          isContainerReflection(docsRoot) &&
+          docsRoot.children.find(child => child.id === childId);
 
         if (!item) {
           return null;

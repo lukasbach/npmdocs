@@ -69,8 +69,8 @@ export const DocsSidebar: React.FC<{
         </SidebarItem>
       ))}
 
-      {moduleGroups?
-        .filter(group => !isNamespace(group))
+      {moduleGroups
+        ?.filter(group => !isNamespace(group))
         .map(({ title, resolvedChildren }) => (
           <React.Fragment key={title}>
             <SidebarHeader as="h2">{title}</SidebarHeader>

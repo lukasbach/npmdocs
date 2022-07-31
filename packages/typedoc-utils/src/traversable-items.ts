@@ -3,10 +3,23 @@ import type { JSONOutput } from "typedoc";
 export const getTraversableItems = (reflection: JSONOutput.Reflection) => {
   const items: JSONOutput.Reflection[] = [];
 
+  items.push(...getSubPropsWithChildren(reflection));
   for (const property of Object.values(reflection)) {
-    if (Array.isArray(property) && property.length > 0 && "id" in property[0]) {
-      items.push(...property);
-    }
+    items.push(...getSubPropsWithChildren(property));
+  }
+
+  return items;
+};
+
+const getSubPropsWithChildren = (obj: any) => {
+  const items: JSONOutput.Reflection[] = [];
+
+  if (Array.isArray(obj) && obj.length > 0 && "id" in obj[0]) {
+    items.push(...obj);
+  }
+
+  if (obj.type?.declaration?.children) {
+    items.push(...obj.type.declaration.children);
   }
 
   return items;

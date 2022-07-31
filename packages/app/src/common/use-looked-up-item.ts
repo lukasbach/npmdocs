@@ -16,6 +16,7 @@ export const useLookedUpItem = (id?: number) => {
     const item = lookupMap.get(id);
 
     if (!item) {
+      console.error(`Could not find ${id} in lookupmap:`, lookupMap);
       return null;
     }
 

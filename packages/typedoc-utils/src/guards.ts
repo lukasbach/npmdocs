@@ -45,9 +45,9 @@ export const hasInheritance = (
   }> => (reflection as JO.DeclarationReflection).inheritedFrom !== undefined;
 
 export const isContainerReflection = (
-  reflection: JO.Reflection
+  reflection: any | undefined
 ): reflection is JO.ContainerReflection =>
-  (reflection as JO.ContainerReflection).children !== undefined;
+  (reflection as JO.ContainerReflection)?.children !== undefined;
 
 export const isReflection = (
   reflection: any | undefined
