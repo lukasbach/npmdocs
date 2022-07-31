@@ -15,7 +15,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!versionWithReadme) {
     const fixedPackage = (packageName as string).replace(/__/g, "/");
     const result = await getFile<any>(
-      `packages/${fixedPackage}/${version}/readme.md`
+      `packages/${fixedPackage}/${version}/readme.md`,
+      false
     );
 
     if (!result) {
@@ -24,7 +25,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     setCacheHeader(res);
-    res.status(200).json(result);
+    res.status(200).json({
+      readme: result,
+    });
   } else {
     setCacheHeader(res);
     res.status(200).json({
