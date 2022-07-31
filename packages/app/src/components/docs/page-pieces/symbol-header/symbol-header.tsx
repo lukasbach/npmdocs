@@ -94,7 +94,7 @@ export const SymbolHeader: FC = () => {
         ref={tabListRef}
       >
         <Tab>Docs</Tab>
-        <Tab>Hierarchy</Tab>
+        {/*<Tab>Hierarchy</Tab>*/}
         <Tab>Raw</Tab>
         <Tab>Source</Tab>
         {isProject(symbolDocs) ? <Tab>package.json</Tab> : null}

@@ -47,7 +47,6 @@ export const useConstructDocs = () => {
       ? []
       : [routeString];
 
-    console.log("!", docs.data);
     const { targetDocs: moduleDocs, targetRoute: moduleRoute } =
       traverseContainer(route, docs.data, ReflectionKind.Namespace);
     const { targetDocs: symbolDocs } = traverseContainer(route, docs.data);

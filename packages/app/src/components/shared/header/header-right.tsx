@@ -9,7 +9,11 @@ export const HeaderRight: FC = () => {
   return (
     <>
       <PackageSearchInput />
-      <HeaderButton text="@lukasbach" href="https://github.com/lukasbach" />
+      <HeaderButton
+        text="@lukasbach"
+        href="https://github.com/lukasbach"
+        isExternal={true}
+      />
       <ColormodeButton />
       <SettingsButton>
         {props => (

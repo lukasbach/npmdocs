@@ -20,6 +20,7 @@ import { RawSource } from "./source/raw-source";
 import { PackagejsonSource } from "./source/packagejson-source";
 import { useEventBus } from "../../common/use-event-bus";
 import { useHotKey } from "../../common/useHotKey";
+import { Hierarchy } from "./page-pieces/hierarchy";
 
 export const DocsPage: React.FC = props => {
   const { symbolDocs, error, packageName, version } = useDocs();
@@ -85,7 +86,9 @@ export const DocsPage: React.FC = props => {
             )}
           </TabPanel>
 
-          <TabPanel>Hierarchy is not yet implemented</TabPanel>
+          {/*<TabPanel>
+            <Hierarchy />
+          </TabPanel>*/}
 
           <TabPanel>
             <RawSource tabIndex={2} />
