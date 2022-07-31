@@ -80,6 +80,9 @@ input::placeholder {
   --search-item-bg: var(--bg);
   --search-item-bg-hover: var(--light-gray1);
   --search-item-text: var(--text-on-bg);
+
+  --warning: #fff7b0;
+  --warning-border: #e1d371;
 }
 
 .dark {
@@ -119,6 +122,9 @@ input::placeholder {
   --search-item-bg: var(--bg);
   --search-item-bg-hover: var(--dark-gray1);
   --search-item-text: var(--text-on-bg);
+
+  --warning: #312601;
+  --warning-border: #594706;
 }
 
 :root {
