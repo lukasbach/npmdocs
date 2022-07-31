@@ -1,0 +1,45 @@
+name: Bug - Package Docs have failed to build
+description: Docs for a package were not generated due to a build failure
+title: "[Bug - Build]: $PACKAGENAME $VERSION"
+labels: ["bug", "build-bug"]
+assignees:
+  - lukasbach
+body:
+  - type: checkboxes
+    id: already-lookedup
+    attributes:
+      label: I already searched for reports for this package
+      description: Please check https://github.com/lukasbach/npmdocs/issues?q=is%3Aopen+is%3Aissue+label%3Abuild-bug+PACKAGE-NAME to see if others have already reported build failures for this package.
+      options:
+        - label: Yes
+          required: true
+  - type: input
+    id: package
+    attributes:
+      label: NPM Package name
+      description: Package for which docs were generated
+      placeholder: ex. react-complex-tree
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: NPM Package version
+      description: Version of the package for which docs were generated
+      placeholder: ex. 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Additional details
+    validations:
+      required: true
+  - type: checkboxes
+    id: titlefilled
+    attributes:
+      label: Title filled
+      description: I replaced the $PACKAGENAME and $VERSION variables in the title with the actual values.
+      options:
+        - label: Yes
+          required: true

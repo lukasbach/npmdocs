@@ -1,0 +1,20 @@
+name: Bug - Other Bug
+description: Other Bug
+title: "[Bug - Other]:"
+labels: ["bug", "other-bug"]
+assignees:
+  - lukasbach
+body:
+  - type: checkboxes
+    id: category
+    attributes:
+      label: This bug does not report either a signature rendering issue or a build failure for a package. Otherwise, please create a bug in the respective category.
+      options:
+        - label: Yes
+          required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+    validations:
+      required: true

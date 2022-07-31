@@ -1,0 +1,51 @@
+name: Bug - Incorrectly rendered signature
+description: Docs for a package are generated, but the type signature for a type is incorrect
+title: "[Bug - Signature]: $PACKAGENAME $VERSION"
+labels: ["bug", "signature-bug"]
+assignees:
+  - lukasbach
+body:
+  - type: input
+    id: package
+    attributes:
+      label: NPM Package name
+      description: Package for which docs were generated
+      placeholder: ex. react-complex-tree
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: NPM Package version
+      description: Version of the package for which docs were generated
+      placeholder: ex. 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: symbol
+    attributes:
+      label: Symbol identifier
+      description: Symbol including property name whose signature was incorrectly rendered. Format `namespace.subnamespace.symbol:property`, or can also be full URL to the symbol
+      placeholder: ex. Namespace.MyClass:myMethod
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What is the expected type?
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Additional details
+    validations:
+      required: true
+  - type: checkboxes
+    id: titlefilled
+    attributes:
+      label: Title filled
+      description: I replaced the $PACKAGENAME and $VERSION variables in the title with the actual values.
+      options:
+        - label: Yes
+          required: true
