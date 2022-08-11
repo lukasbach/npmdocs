@@ -13,6 +13,21 @@ import { isDeclarationReflection } from "@lukasbach/npmdocs-typedoc-utils";
 import { usePackageJson } from "../../../api/api-helpers";
 import { DocsEditor } from "./docs-editor";
 
+const getTypePrefix = (
+  typesVersions?: Record<
+    string,
+    Record<string, string[] | undefined> | undefined
+  >
+) => {
+  return typesVersions &&
+    Object.keys(Object.values(typesVersions)[0] ?? {})[0] === "*"
+    ? Object.values(Object.values(typesVersions)?.[0] ?? {})?.[0]?.[0]?.slice(
+        0,
+        -1
+      ) ?? ""
+    : "";
+};
+
 export const SymbolSource: FC<{ tabIndex: number }> = ({ tabIndex }) => {
   const { packageName, encodedPackageName, version, symbolDocs } = useDocs();
   const packageJson = usePackageJson(encodedPackageName, version);
@@ -30,15 +45,19 @@ export const SymbolSource: FC<{ tabIndex: number }> = ({ tabIndex }) => {
     NProgress.start();
 
     const typesBasePath = (
-      packageJson?.data?.types ?? packageJson?.data?.typings
+      getTypePrefix(packageJson.data.typesVersions) +
+      (packageJson?.data?.types ?? packageJson?.data?.typings)
     )
       ?.split("/")
       .slice(0, -1)
       .join("/");
 
-    fetch(
-      `https://unpkg.com/${packageName}@${version}/${typesBasePath}/${sourceFile.fileName}`
-    )
+    const url = `https://unpkg.com/${packageName}@${version}/${typesBasePath}/${sourceFile.fileName}`;
+    const altUrl = `https://unpkg.com/${packageName}@${version}/${sourceFile.fileName}`;
+
+    fetch(url)
+      .catch(() => fetch(altUrl))
+      .then(res => (!res.ok ? fetch(altUrl) : res))
       .then(res => res.text())
       .then(code => {
         setCode(code);
@@ -73,13 +92,17 @@ export const SymbolSource: FC<{ tabIndex: number }> = ({ tabIndex }) => {
       code={code}
       language={language}
       onDone={editor => {
-        editor.revealLinesNearTop(sourceFile.line, sourceFile.line);
-        editor.setSelection({
-          startLineNumber: sourceFile.line,
-          endLineNumber: sourceFile.line,
-          startColumn: sourceFile.character,
-          endColumn: code.split("\n")[sourceFile.line - 1]?.length,
-        });
+        try {
+          editor.revealLinesNearTop(sourceFile.line, sourceFile.line);
+          editor.setSelection({
+            startLineNumber: sourceFile.line,
+            endLineNumber: sourceFile.line,
+            startColumn: sourceFile.character,
+            endColumn: code.split("\n")[sourceFile.line - 1]?.length,
+          });
+        } catch (e) {
+          console.error("Could not set editor selection", e);
+        }
       }}
     />
   );
