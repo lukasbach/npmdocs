@@ -1,15 +1,21 @@
 import Link from "next/link";
-import React, { FC, memo, ReactNode } from "react";
+import React, {
+  createContext,
+  FC,
+  memo,
+  ReactNode,
+  useCallback,
+  useContext,
+  useRef,
+} from "react";
 import type { JSONOutput } from "typedoc";
 import { useDocs } from "../provider/use-docs";
 import { ReflectionKind } from "../../../common/reflection-kind";
-import {
-  isContainerReflection,
-  isTypeParameter,
-} from "@lukasbach/npmdocs-typedoc-utils";
+import { isTypeParameter } from "@lukasbach/npmdocs-typedoc-utils";
 
 import style from "./signature.module.css";
 import { useLookedUpItem } from "../../../common/use-looked-up-item";
+import { useInterval } from "react-use";
 
 interface Props {
   type?:
@@ -47,7 +53,40 @@ const joinComponents = (
   </>
 );
 
+const OverflowContext = createContext({
+  tracker: { current: {} },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  track: (id: string | number) => {},
+});
+
 export const Signature = memo(function Signature({ type, reference }: Props) {
+  const tracker = useRef({});
+  const track = useCallback((id: string | number) => {
+    if (tracker.current[id] === undefined) {
+      tracker.current[id] = 0;
+    }
+    tracker.current[id]++;
+  }, []);
+  useInterval(() => (tracker.current = {}), 1000);
+  return (
+    <OverflowContext.Provider value={{ tracker, track }}>
+      <WrappedSignature type={type} reference={reference} />
+    </OverflowContext.Provider>
+  );
+});
+
+const WrappedSignature = memo(function WrappedSignature({
+  type,
+  reference,
+}: Props) {
+  const { tracker, track } = useContext(OverflowContext);
+  if ("id" in type) {
+    track(type.id);
+    if (tracker.current[type.id] >= 50) {
+      return <>...</>;
+    }
+  }
+
   const typeAttachedReference = useLookedUpItem((type as any)?.id);
 
   if (!type) {
@@ -64,36 +103,36 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
   }
 
   if (typeof type.type !== "string") {
-    return <Signature type={type.type} reference={reference} />;
+    return <WrappedSignature type={type.type} reference={reference} />;
   }
 
   switch (type.type) {
     case "array":
       return (
         <>
-          <Signature type={type.elementType} />
+          <WrappedSignature type={type.elementType} />
           []
         </>
       );
     case "conditional":
       return (
         <>
-          <Signature type={type.checkType} />
+          <WrappedSignature type={type.checkType} />
           {type.extendsType && (
             <>
               {" "}
-              extends <Signature type={type.extendsType} />{" "}
+              extends <WrappedSignature type={type.extendsType} />{" "}
             </>
           )}
-          ? <Signature type={type.trueType} />
-          : <Signature type={type.falseType} />
+          ? <WrappedSignature type={type.trueType} />
+          : <WrappedSignature type={type.falseType} />
         </>
       );
     case "indexedAccess":
       return (
         <>
-          <Signature type={type.objectType} />[
-          <Signature type={type.indexType} />]
+          <WrappedSignature type={type.objectType} />[
+          <WrappedSignature type={type.indexType} />]
         </>
       );
     case "inferred":
@@ -104,12 +143,12 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
       );
     case "intersection":
       return joinComponents(
-        type.types.map((t, i, a) => <Signature key={i} type={t} />),
+        type.types.map((t, i, a) => <WrappedSignature key={i} type={t} />),
         " & "
       );
     case "union":
       return joinComponents(
-        type.types.map((t, i, a) => <Signature key={i} type={t} />),
+        type.types.map((t, i, a) => <WrappedSignature key={i} type={t} />),
         " | "
       );
     case "intrinsic":
@@ -124,30 +163,33 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
     case "optional":
       return (
         <>
-          <Signature type={type.elementType} />?
+          <WrappedSignature type={type.elementType} />?
         </>
       );
     case "predicate":
       return type.asserts ? (
         <>
-          asserts <Signature type={type.targetType} />?
+          asserts <WrappedSignature type={type.targetType} />?
         </>
       ) : (
         <>
-          {type.name} is <Signature type={type.targetType} />?
+          {type.name} is <WrappedSignature type={type.targetType} />?
         </>
       );
     case "query":
       return (
         <>
-          typeof <Signature type={type.queryType} />
+          typeof <WrappedSignature type={type.queryType} />
         </>
       );
     case "reference": {
       if (type.id) {
         // TODO
         return typeAttachedReference?.reflection ? (
-          <Signature type={typeAttachedReference.reflection} reference={type} />
+          <WrappedSignature
+            type={typeAttachedReference.reflection}
+            reference={type}
+          />
         ) : (
           <>{type.qualifiedName ?? type.name}</>
         );
@@ -163,7 +205,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
       return (
         <>
           ...
-          <Signature type={type.elementType} />
+          <WrappedSignature type={type.elementType} />
         </>
       );
     case "tuple":
@@ -171,7 +213,9 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
         <>
           [
           {joinComponents(
-            type.elements.map((t, i, a) => <Signature key={i} type={t} />),
+            type.elements.map((t, i, a) => (
+              <WrappedSignature key={i} type={t} />
+            )),
             ", "
           )}
           ]
@@ -180,7 +224,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
     case "typeOperator":
       return (
         <>
-          {type.operator} <Signature type={type.target} />
+          {type.operator} <WrappedSignature type={type.target} />
         </>
       );
     case "unknown":
@@ -190,13 +234,13 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
         <>
           {"{"}
           {type.readonlyModifier && `${type.readonlyModifier}readonly `}[$
-          {type.parameter} in <Signature type={type.parameterType} />]
+          {type.parameter} in <WrappedSignature type={type.parameterType} />]
           {type.templateType.type === "optional" && "?"}:{" "}
           {type.optionalModifier}
           {type.templateType.type === "optional" ? (
-            <Signature type={type.templateType.elementType} />
+            <WrappedSignature type={type.templateType.elementType} />
           ) : (
-            <Signature type={type.templateType} />
+            <WrappedSignature type={type.templateType} />
           )}
           {"}"}
         </>
@@ -209,7 +253,7 @@ export const Signature = memo(function Signature({ type, reference }: Props) {
           {type.tail.map(([subtype, str], i) => (
             <>
               {"${"}
-              <Signature key={i} type={subtype} />
+              <WrappedSignature key={i} type={subtype} />
               {"}"}
               {str}
             </>
@@ -285,7 +329,7 @@ const ReflectionSignature = memo(function ReflectionSignature({
           {(type as JSONOutput.ContainerReflection).children?.map(
             (child, i, arr) => (
               <React.Fragment key={i}>
-                {child.name}: <Signature type={child} />;{" "}
+                {child.name}: <WrappedSignature type={child} />;{" "}
               </React.Fragment>
             )
           )}
@@ -335,13 +379,13 @@ const DeclarationReflectionSignature = memo(
             {isTypeParameter(type) && type.type && (
               <>
                 {" extends "}
-                <Signature type={type.type} />
+                <WrappedSignature type={type.type} />
               </>
             )}
             {isTypeParameter(type) && type.default && (
               <>
                 {" = "}
-                <Signature type={type.default} />
+                <WrappedSignature type={type.default} />
               </>
             )}
           </>
@@ -350,12 +394,12 @@ const DeclarationReflectionSignature = memo(
       case ReflectionKind.Parameter:
         return (
           <>
-            {type.name}: <Signature type={type.type} />
+            {type.name}: <WrappedSignature type={type.type} />
           </>
         );
 
       case ReflectionKind.Property:
-        return <Signature type={type.type} />;
+        return <WrappedSignature type={type.type} />;
 
       case ReflectionKind.Interface:
       case ReflectionKind.Class:
@@ -370,7 +414,7 @@ const DeclarationReflectionSignature = memo(
                 {"<"}
                 {joinComponents(
                   reference.typeArguments.map((arg, index) => (
-                    <Signature type={arg} key={index} />
+                    <WrappedSignature type={arg} key={index} />
                   )),
                   ", "
                 )}
@@ -418,7 +462,7 @@ const SignatureReflectionSignature = memo(
               ", "
             )}
             ){" => "}
-            <Signature type={type.type} />
+            <WrappedSignature type={type.type} />
           </>
         );
 
