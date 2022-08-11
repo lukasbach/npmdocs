@@ -22,6 +22,12 @@ by npmdocs. Features include:
 - Convenient links to Bundlephobia, Packagephobia, its repo and npm page
 - Hotkeys, Darkmode and more convenience features!
 
+![npmdocs homepage with search view](./screens/1.png)
+![npmdocs package overview](./screens/2.png)
+![npmdocs documentation view](./screens/3.png)
+![npmdocs search overlay](./screens/4.png)
+![npmdocs code view](./screens/5.png)
+
 ## Maintenance
 
 ### App
