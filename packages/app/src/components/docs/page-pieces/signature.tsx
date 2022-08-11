@@ -230,6 +230,10 @@ const ReflectionSignature = memo(function ReflectionSignature({
   type: JSONOutput.Reflection;
   reference?: JSONOutput.ReferenceType;
 }) {
+  if (!type) {
+    console.log("!!", type);
+    return null;
+  }
   switch (type.kind) {
     case ReflectionKind.Interface:
     case ReflectionKind.Class:
@@ -253,6 +257,28 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.GetSignature:
       return <SignatureReflectionSignature type={type} reference={reference} />;
 
+    case ReflectionKind.Accessor: {
+      const getSignature = (type as any).getSignature?.[0];
+      const setSignature = (type as any).setSignature?.[0];
+      return (
+        <>
+          {"{{"}{" "}
+          {getSignature && (
+            <>
+              get: <ReflectionSignature type={getSignature} />
+              {", "}
+            </>
+          )}
+          {setSignature && (
+            <>
+              get: <ReflectionSignature type={setSignature} />,
+            </>
+          )}
+          {" }}"}
+        </>
+      );
+    }
+
     case ReflectionKind.ObjectLiteral:
       return (
         <>
@@ -273,7 +299,6 @@ const ReflectionSignature = memo(function ReflectionSignature({
     case ReflectionKind.Namespace:
     case ReflectionKind.Variable:
     case ReflectionKind.IndexSignature:
-    case ReflectionKind.Accessor:
     case ReflectionKind.Event:
     case ReflectionKind.Reference:
       return <>unkown*</>;
