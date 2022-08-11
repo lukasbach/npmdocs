@@ -231,7 +231,6 @@ const ReflectionSignature = memo(function ReflectionSignature({
   reference?: JSONOutput.ReferenceType;
 }) {
   if (!type) {
-    console.log("!!", type);
     return null;
   }
   switch (type.kind) {
