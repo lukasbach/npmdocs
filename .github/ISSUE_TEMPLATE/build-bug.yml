@@ -11,7 +11,7 @@ body:
       label: I already searched for reports for this package
       description: Please check https://github.com/lukasbach/npmdocs/issues?q=is%3Aopen+is%3Aissue+label%3Abuild-bug+PACKAGE-NAME to see if others have already reported build failures for this package.
       options:
-        - label: Yes
+        - label: Yes, I did
           required: true
   - type: input
     id: package
@@ -41,5 +41,5 @@ body:
       label: Title filled
       description: I replaced the $PACKAGENAME and $VERSION variables in the title with the actual values.
       options:
-        - label: Yes
+        - label: Yes, title was filled
           required: true

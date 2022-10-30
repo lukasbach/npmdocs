@@ -36,11 +36,24 @@ const tsconfig: any = {
   include: ["**/*.ts", "**/*.tsx"],
 };
 
-const tmpPath = "./tmp";
-const tsconfigPath = join(tmpPath, "tsconfig.json");
+const tmpRootPath = join(process.cwd(), "tmp");
 const maxSize = 1024 * 1024 * 3.5;
 
-const scanFolderStructure = async (currentFolder = tmpPath) => {
+class Output {
+  public files: Record<string, string> = {};
+  writeFile(fileName: string, data: string) {
+    this.files[fileName] = data;
+    // TODO make sure that the file name is then prefixed with the root path
+  }
+  writeJson(fileName: string, data: any) {
+    this.files[fileName] = JSON.stringify(data);
+  }
+  log(message: string) {
+    console.log(message);
+  }
+}
+
+const scanFolderStructure = async (currentFolder: string) => {
   const currentObj = {};
   const files = await readdir(currentFolder);
   for (const file of files) {
@@ -68,12 +81,10 @@ const getTypePrefix = (
     : "";
 };
 
-const build = async (
-  packageName: string,
-  version: string,
-  target: string,
-  runId: string
-) => {
+const build = async (out: Output, packageName: string, version: string) => {
+  const tmpPath = `${tmpRootPath}/${packageName}-${version}`;
+  await ensureDir(tmpPath);
+  const tsconfigPath = join(tmpPath, "tsconfig.json");
   await remove(tmpPath);
 
   const packageNameWithoutScope = packageName.includes("@")
@@ -82,24 +93,21 @@ const build = async (
 
   const url = `https://registry.npmjs.org/${packageName}/-/${packageNameWithoutScope}-${version}.tgz`;
 
-  console.log(
-    `Building package ${packageName}@${version} to ${target} (without scope: ${packageNameWithoutScope})`
+  out.log(
+    `Building package ${packageName}@${version} (without scope: ${packageNameWithoutScope})`
   );
-  console.log(`runId is ${runId}`);
-  console.log(`Using url ${url}`);
+  out.log(`Using url ${url}`);
 
   await download({
     url,
     dir: tmpPath,
   });
 
-  console.log(`Downloaded to ${tmpPath}`);
+  out.log(`Downloaded to ${tmpPath}`);
 
-  await ensureDir(target);
-
-  const folderStructure = await scanFolderStructure();
+  const folderStructure = await scanFolderStructure(tmpPath);
   const folderStructureCompressed = compress(folderStructure);
-  await writeJson(join(target, "folder.json"), folderStructureCompressed);
+  out.writeJson("folder.json", folderStructureCompressed);
 
   const packageFolder = (await readdir(tmpPath))[0];
   const packageJsonPath = join(tmpPath, packageFolder, "package.json");
@@ -107,39 +115,40 @@ const build = async (
   const typesWithoutPrefix = packageJson.types ?? packageJson.typings;
 
   if (!typesWithoutPrefix) {
-    await writeJson(
-      join(target, "docs.json"),
+    out.writeJson(
+      "docs.json",
       compress({
         error: "No types found in package.json",
         errorCode: "no-types",
       })
     );
+    // TODO finally
     return;
   }
 
   const typesPrefix = getTypePrefix(packageJson.typesVersions);
   const types = typesPrefix + typesWithoutPrefix;
 
-  console.log(`Using types ${types} (with prefix ${typesPrefix})`);
+  out.log(`Using types ${types} (with prefix ${typesPrefix})`);
 
-  console.log("Patching package.json...");
+  out.log("Patching package.json...");
   await writeJson(packageJsonPath, {
     ...packageJson,
     devDependencies: {},
     peerDependencies: {},
   });
 
-  console.log("Installing dependencies...");
+  out.log("Installing dependencies...");
   const installProcess = await promisify(exec)(
     "npm install --ignore-scripts --no-package-lock --production --omit=dev --legacy-peer-deps",
     {
       cwd: join(tmpPath, packageFolder),
     }
   );
-  console.log(installProcess.stdout);
+  out.log(installProcess.stdout);
 
-  console.log(`Using full type path ${join(tmpPath, packageFolder, types)}`);
-  console.log(`Using tsconfig from ${tsconfigPath}`);
+  out.log(`Using full type path ${join(tmpPath, packageFolder, types)}`);
+  out.log(`Using tsconfig from ${tsconfigPath}`);
 
   if (!existsSync(tsconfigPath)) {
     await writeJson(tsconfigPath, tsconfig);
@@ -169,17 +178,16 @@ const build = async (
 
   // TODO filter out namespaces with the name "export=", see @types/react 18.0.2
 
-  console.log("Purging...");
+  out.log("Purging...");
   const purged = dedup(docs);
 
-  console.log("Compressing...");
+  out.log("Compressing...");
   const compressed = compress(
     JSON.parse(JSON.stringify(purged).replaceAll("tmp/package", ""))
   );
-  const docsFile = join(target, "docs.json");
-  await writeJson(docsFile, compressed);
+  out.writeJson("docs.json", compressed);
 
-  console.log("Copying readme...");
+  out.log("Copying readme...");
   const maybeFile = (file: string) =>
     existsSync(join(tmpPath, packageFolder, file))
       ? join(tmpPath, packageFolder, file)
@@ -191,20 +199,20 @@ const build = async (
     maybeFile("readme.txt");
   const readmeFileContents = readmeFile ? await readFile(readmeFile) : null;
   if (readmeFileContents) {
-    await writeFile(join(target, "readme.md"), readmeFileContents, {
-      encoding: "utf-8",
-    });
+    out.writeFile("readme.md", readmeFileContents.toString());
   } else {
-    console.log("Skipping, readme not found...");
+    out.log("Skipping, readme not found...");
   }
 
-  const { size } = await stat(docsFile);
-  console.log(`Docs file is ${Math.floor(size / 1024)}kb in size`);
+  const localDocsFile = join(tmpPath, "docs.json");
+  await writeJson(localDocsFile, compressed);
+  const { size } = await stat(tmpPath);
+  out.log(`Docs file is ${Math.floor(size / 1024)}kb in size`);
 
   if (size > maxSize) {
-    console.log("File too large, aborting...");
-    await writeJson(
-      join(target, "docs.json"),
+    out.log("File too large, aborting...");
+    out.writeJson(
+      "docs.json",
       compress({
         error: `Docs file is larger than maximum file size (${Math.floor(
           size / 1024
@@ -215,46 +223,24 @@ const build = async (
     );
   }
 
-  // await remove(tmpPath);
+  await remove(tmpPath);
 };
 
-program
-  .argument("<package>", "package name")
-  .argument("<version>", "package version")
-  .argument("<target>", "target folder")
-  .argument("[runId]", "github run id")
-  .action(
-    async (
-      packageName: string,
-      version: string,
-      target: string,
-      runId: string
-    ) => {
-      try {
-        await build(packageName, version, target, runId);
-      } catch (e) {
-        console.error("Error: ", e);
-        await writeJson(
-          join(target, "docs.json"),
-          compress({
-            error: "Build failed",
-            errorCode: "build-error",
-            details: e.message ?? e,
-          })
-        );
-      }
-
-      await writeJson(
-        join(target, "info.json"),
-        {
-          packageName,
-          version,
-          runId,
-          date: Date.now(),
-        },
-        { spaces: 2 }
-      );
-    }
-  );
-
-program.parse();
+export const buildPackage = async (packageName: string, packageVersion) => {
+  const out = new Output();
+  try {
+    await build(out, packageName, packageVersion);
+  } catch (e) {
+    console.error("Error: ", e);
+    out.writeJson(
+      "docs.json",
+      compress({
+        error: "Build failed",
+        errorCode: "build-error",
+        details: e.message ?? e,
+      })
+    );
+  } finally {
+    out.log("Done");
+  }
+};

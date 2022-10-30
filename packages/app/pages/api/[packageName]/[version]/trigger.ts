@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  dispatchWorkflow,
-  getWorkflowRuns,
-} from "../../../../src/github/helpers";
+import { getWorkflowRuns } from "../../../../src/github/helpers";
 import { getVersions } from "../../../../src/github/get-versions";
+import { buildPackage } from "../../../../src/backend/buildtools";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
@@ -44,10 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  await dispatchWorkflow({
-    packageName: fixedPackage,
-    packageVersion: version,
-  });
-
+  const build = buildPackage(fixedPackage, version as string);
   res.status(204).end();
+  await build;
 };
