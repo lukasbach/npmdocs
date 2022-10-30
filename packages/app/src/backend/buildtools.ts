@@ -35,7 +35,8 @@ const tsconfig: any = {
   include: ["**/*.ts", "**/*.tsx"],
 };
 
-const tmpRootPath = join(process.cwd(), "tmp");
+const tmpRootPath =
+  process.env.NODE_ENV === "development" ? join(process.cwd(), "tmp") : "/tmp";
 const maxSize = 1024 * 1024 * 3.5;
 
 class Output {
