@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getWorkflowRuns } from "../../../../src/github/helpers";
 import { getVersions } from "../../../../src/github/get-versions";
 import { buildPackage } from "../../../../src/backend/buildtools";
 
@@ -9,26 +8,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const currentRuns = (await getWorkflowRuns("in_progress")).count;
-
-  if (currentRuns >= 3) {
-    res.status(429).json({
-      error:
-        "There are currently too many in-progress builds, try again later.",
-    });
-    return;
-  }
-
   const { packageName, version } = req.query;
   const fixedPackage = (packageName as string).replace(/__/g, "/");
-
-  // if (fixedPackage.startsWith("@types/")) {
-  //   res.status(400).json({
-  //     error:
-  //       "Dont trigger builds on definitely typed packages, run them directly on the code package.",
-  //   });
-  //   return;
-  // }
 
   const versions = await getVersions(fixedPackage);
   if (!Object.keys(versions).includes(version as string)) {
@@ -44,5 +25,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const build = buildPackage(fixedPackage, version as string);
   res.status(204).end();
-  await build;
+  try {
+    await build;
+  } catch (e) {
+    console.error(e);
+  }
 };

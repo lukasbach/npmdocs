@@ -10,16 +10,15 @@ import {
   writeJson,
   remove,
   stat,
-  writeFile,
   readFile,
 } from "fs-extra";
 import { join } from "path";
-import { program } from "commander";
 import { compress } from "compress-json";
 import { exec } from "child_process";
 import { promisify } from "util";
 import { dedup } from "@lukasbach/npmdocs-typedoc-utils";
 import download from "download-tarball";
+import { uploadFile } from "./data-helpers";
 
 const tsconfig: any = {
   compilerOptions: {
@@ -50,6 +49,14 @@ class Output {
   }
   log(message: string) {
     console.log(message);
+  }
+  async syncToS3(packageName: string, version: string) {
+    const promises: Promise<void>[] = [];
+    await Promise.all(
+      Object.entries(this.files).map(([fileName, data]) =>
+        uploadFile(join(packageName, version, fileName), data)
+      )
+    );
   }
 }
 
@@ -83,9 +90,10 @@ const getTypePrefix = (
 
 const build = async (out: Output, packageName: string, version: string) => {
   const tmpPath = `${tmpRootPath}/${packageName}-${version}`;
-  await ensureDir(tmpPath);
   const tsconfigPath = join(tmpPath, "tsconfig.json");
+  await ensureDir(tmpPath);
   await remove(tmpPath);
+  await ensureDir(tmpPath);
 
   const packageNameWithoutScope = packageName.includes("@")
     ? packageName.split("/", 2)[1]
@@ -206,7 +214,7 @@ const build = async (out: Output, packageName: string, version: string) => {
 
   const localDocsFile = join(tmpPath, "docs.json");
   await writeJson(localDocsFile, compressed);
-  const { size } = await stat(tmpPath);
+  const { size } = await stat(localDocsFile);
   out.log(`Docs file is ${Math.floor(size / 1024)}kb in size`);
 
   if (size > maxSize) {
@@ -223,7 +231,7 @@ const build = async (out: Output, packageName: string, version: string) => {
     );
   }
 
-  await remove(tmpPath);
+  // await remove(tmpPath);
 };
 
 export const buildPackage = async (packageName: string, packageVersion) => {
@@ -241,6 +249,7 @@ export const buildPackage = async (packageName: string, packageVersion) => {
       })
     );
   } finally {
+    await out.syncToS3(packageName, packageVersion);
     out.log("Done");
   }
 };
